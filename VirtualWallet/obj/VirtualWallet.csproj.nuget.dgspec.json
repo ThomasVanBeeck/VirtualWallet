@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "T:\\Github Projects\\VirtualWallet\\VirtualWallet\\VirtualWallet.csproj": {}
+    "T:\\Github Projects\\VirtualWallet-backend\\VirtualWallet\\VirtualWallet.csproj": {}
   },
   "projects": {
-    "T:\\Github Projects\\VirtualWallet\\VirtualWallet\\VirtualWallet.csproj": {
+    "T:\\Github Projects\\VirtualWallet-backend\\VirtualWallet\\VirtualWallet.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "T:\\Github Projects\\VirtualWallet\\VirtualWallet\\VirtualWallet.csproj",
+        "projectUniqueName": "T:\\Github Projects\\VirtualWallet-backend\\VirtualWallet\\VirtualWallet.csproj",
         "projectName": "VirtualWallet",
-        "projectPath": "T:\\Github Projects\\VirtualWallet\\VirtualWallet\\VirtualWallet.csproj",
+        "projectPath": "T:\\Github Projects\\VirtualWallet-backend\\VirtualWallet\\VirtualWallet.csproj",
         "packagesPath": "C:\\Users\\Thomas\\.nuget\\packages\\",
-        "outputPath": "T:\\Github Projects\\VirtualWallet\\VirtualWallet\\obj\\",
+        "outputPath": "T:\\Github Projects\\VirtualWallet-backend\\VirtualWallet\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
