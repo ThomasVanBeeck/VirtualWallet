@@ -10,5 +10,6 @@ public class AppDbContext : DbContext
     {
     }
     
-    public DbSet<Wallet> Wallets { get; set; } = null!;
+    //public DbSet<Wallet> Wallets { get; set; } = null!;
+    public DbSet<User> Users { get; set; } = null!;
 }

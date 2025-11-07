@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿/*using Microsoft.EntityFrameworkCore;
 using VirtualWallet.Models;
 
 namespace VirtualWallet.Repositories
@@ -50,4 +50,4 @@ namespace VirtualWallet.Repositories
             }
         }
     }
-}
+}*/
