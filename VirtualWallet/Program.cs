@@ -4,6 +4,8 @@ using VirtualWallet.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddAutoMapper(typeof(Program));
+
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 
@@ -19,14 +21,25 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddControllers();
-
 //builder.Services.AddScoped<WalletRepository>();
 builder.Services.AddScoped<UserRepository>();
-
 builder.Services.AddScoped<UserService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication("CookieAuth")
+    .AddCookie("CookieAuth", options =>
+    {
+
+        options.Cookie.Name = "VirtualWalletAuth";
+        options.Cookie.HttpOnly = true;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+        options.Cookie.SameSite = SameSiteMode.None;
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+        options.LoginPath = "/api/user/login"; // Wordt zelden gebruikt bij API's
+        options.AccessDeniedPath = "/api/user/accessdenied";
+    });
 
 var app = builder.Build();
 
@@ -43,5 +56,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors("LocalAngular");
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 app.Run();

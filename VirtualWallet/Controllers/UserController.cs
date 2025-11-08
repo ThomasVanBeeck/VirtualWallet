@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using VirtualWallet.Services;
 
 namespace VirtualWallet.Controllers
@@ -13,15 +16,8 @@ namespace VirtualWallet.Controllers
         {
             _userService = userService;
         }
-
-        [HttpGet("currentuser")]
-        public async Task<IActionResult> GetCurrentUser([FromBody]  UserDto dto)
-        {
-            var user = await _userService.GetCurrentUserAsync(dto.Username);
-            if (user == null) return NotFound();
-            return Ok(user);
-        }
         
+        [Authorize(AuthenticationSchemes = "CookieAuth")]
         [HttpGet("testuser")]
         public async Task<IActionResult> GetTestUser()
         {
@@ -30,21 +26,18 @@ namespace VirtualWallet.Controllers
             return Ok(user);
         }
         
-        
-        /*
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] UserLoginDto dto)
+        [Authorize(AuthenticationSchemes = "CookieAuth")]
+        [HttpGet("current-user")]
+        public async Task<IActionResult> GetCurrentUser()
         {
-            var user = await _userService.LoginAsync(dto.Username, dto.Password);
-            if (user == null) return Unauthorized();
-        
-            // hier kun je eventueel een session-cookie zetten
-            HttpContext.Response.Cookies.Append("sessionId", "dummy-session"); 
-
-            return Ok(new { user.Id, user.Username, user.Email });
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            // WIP: add query check in db to see if user exists and get other
+            // attributes besides the username, like returning firstname for example
+            var userDTO = await _userService.GetCurrentUserAsync("testuser1");
+            if (userDTO == null) return NotFound();
+            
+            if (string.IsNullOrEmpty(userId)) return Unauthorized();
+            return Ok(userDTO);
         }
-        */
-        
-        
     }
 }

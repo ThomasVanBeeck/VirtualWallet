@@ -20,7 +20,7 @@ public static class DbSeeder
                     FirstName = "Test",
                     LastName = "User1",
                     Email = "test1@example.com",
-                    PasswordHash = "password1hashed" // dev placeholder
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("password111!")
                 },
                 new User
                 {
@@ -29,7 +29,7 @@ public static class DbSeeder
                     FirstName = "Test",
                     LastName = "User2",
                     Email = "test2@example.com",
-                    PasswordHash = "password2hashed" // dev placeholder
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("password222!")
                 }
             );
         }
