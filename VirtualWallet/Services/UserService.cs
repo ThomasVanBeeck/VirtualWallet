@@ -29,12 +29,19 @@ namespace VirtualWallet.Services
             return user;
         }
 
-        public async Task<UserDTO?> GetCurrentUserAsync(string username)
+        public async Task<UserDTO?> GetCurrentUserAsync(Guid id)
         {
-            var user = await _userRepository.GetByUsernameAsync(username);
+            var user = await _userRepository.GetByIdAsync(id);
             if (user == null) return null;
 
             return _mapper.Map<UserDTO>(user);
+        }
+
+        public async Task<bool> GetUsernameExists(string username)
+        {
+            var user = await _userRepository.GetByUsernameAsync(username);
+            if (user == null) return false;
+            else return true;
         }
     }
     

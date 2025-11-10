@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using VirtualWallet.DTOs;
 using VirtualWallet.Services;
 
 namespace VirtualWallet.Controllers
@@ -18,26 +19,29 @@ namespace VirtualWallet.Controllers
         }
         
         [Authorize(AuthenticationSchemes = "CookieAuth")]
-        [HttpGet("testuser")]
-        public async Task<IActionResult> GetTestUser()
-        {
-            var user = await _userService.GetCurrentUserAsync("testuser1");
-            if (user == null) return NotFound();
-            return Ok(user);
-        }
-        
-        [Authorize(AuthenticationSchemes = "CookieAuth")]
         [HttpGet("current-user")]
-        public async Task<IActionResult> GetCurrentUser()
+        public async Task<ActionResult<UserDTO?>> GetCurrentUser() 
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            // WIP: add query check in db to see if user exists and get other
-            // attributes besides the username, like returning firstname for example
-            var userDTO = await _userService.GetCurrentUserAsync("testuser1");
-            if (userDTO == null) return NotFound();
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
             
-            if (string.IsNullOrEmpty(userId)) return Unauthorized();
+            if (string.IsNullOrEmpty(userIdString))
+                return Unauthorized(); 
+            if (!Guid.TryParse(userIdString, out var id))
+                return Unauthorized(); 
+            
+            var userDTO = await _userService.GetCurrentUserAsync(id);
+
+            if (userDTO == null) 
+                return NotFound("User not found based on cookie ID.");
+
             return Ok(userDTO);
+        }
+
+        [HttpGet("exists/{username}")]
+        public async Task<ActionResult<bool>> GetExists(string username)
+        {
+            bool isKnownUsername = await _userService.GetUsernameExists(username);
+            return Ok(isKnownUsername);
         }
     }
 }

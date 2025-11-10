@@ -5,11 +5,9 @@ public static class DbSeeder
 {
     public static void Seed(AppDbContext db)
     {
-        // Optioneel: eerst de database resetten
         db.Database.EnsureDeleted();
         db.Database.EnsureCreated();
-
-        // Voeg standaard users toe
+        
         if (!db.Users.Any())
         {
             db.Users.AddRange(
@@ -35,7 +33,5 @@ public static class DbSeeder
         }
 
         db.SaveChanges();
-
-        // Voeg andere standaard data toe
     }
 }
