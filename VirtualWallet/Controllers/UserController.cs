@@ -32,7 +32,7 @@ namespace VirtualWallet.Controllers
             var userDTO = await _userService.GetCurrentUserAsync(id);
 
             if (userDTO == null) 
-                return NotFound("User not found based on cookie ID.");
+                return NotFound("User not found.");
 
             return Ok(userDTO);
         }
@@ -42,6 +42,13 @@ namespace VirtualWallet.Controllers
         {
             bool isKnownUsername = await _userService.GetUsernameExists(username);
             return Ok(isKnownUsername);
+        }
+
+        [HttpPost("create-user")]
+        public async Task<IActionResult> CreateUser([FromBody] UserRegisterDTO userRegisterDto)
+        {
+            var newUser = await _userService.CreateUserAsync(userRegisterDto);
+            return Ok();
         }
     }
 }

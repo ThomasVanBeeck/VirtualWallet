@@ -2,6 +2,7 @@
 using VirtualWallet.Services;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
+using VirtualWallet.DTOs;
 
 namespace VirtualWallet.Controllers;
 

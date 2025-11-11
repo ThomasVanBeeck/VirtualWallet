@@ -9,5 +9,11 @@ public class MappingProfile : Profile
     public MappingProfile()
     {
         CreateMap<User, UserDTO>();
+        CreateMap<UserDTO, User>();
+        CreateMap<UserRegisterDTO, User>()
+            .ForMember(
+                dest => dest.PasswordHash, 
+                opt => opt.MapFrom(src => BCrypt.Net.BCrypt.HashPassword(src.Password))
+            );
     }
 }

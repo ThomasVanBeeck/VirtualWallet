@@ -43,6 +43,16 @@ namespace VirtualWallet.Services
             if (user == null) return false;
             else return true;
         }
+
+        public async Task<UserDTO?> CreateUserAsync(UserRegisterDTO userRegisterDto)
+        {
+            if (await _userRepository.GetByUsernameAsync(userRegisterDto.Username) != null)
+            {
+                throw new Exception("Username already exists");
+            }
+            var user = _mapper.Map<User>(userRegisterDto);
+            var newUser = await _userRepository.AddAsync(user);
+            return _mapper.Map<UserDTO>(newUser);
+        }
     }
-    
 }
