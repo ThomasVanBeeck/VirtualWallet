@@ -10,6 +10,7 @@ public class MappingProfile : Profile
     {
         CreateMap<User, UserDTO>();
         CreateMap<UserDTO, User>();
+        CreateMap<Stock, StockDTO>();
         CreateMap<UserRegisterDTO, User>()
             .ForMember(
                 dest => dest.PasswordHash, 

@@ -21,9 +21,12 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddControllers();
-//builder.Services.AddScoped<WalletRepository>();
+
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<UserService>();
+
+builder.Services.AddScoped<StockRepository>();
+builder.Services.AddScoped<StockService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

@@ -1,7 +1,6 @@
-﻿using System;
+﻿
+namespace VirtualWallet.Models;
 
-namespace VirtualWallet.Models
-{
     public class User
     {
         public Guid Id { get; set; }
@@ -11,4 +10,3 @@ namespace VirtualWallet.Models
         public string Email { get; set; } = null!;
         public string PasswordHash { get; set; } = null!;
     }
-}
