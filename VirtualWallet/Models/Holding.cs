@@ -11,4 +11,6 @@ public class Holding
     // many to one
     public Guid StockId { get; set; }
     public Stock Stock { get; set; } = null!;
+
+    public List<Order> Orders { get; set; } = new();
 }

@@ -6,7 +6,6 @@ namespace VirtualWallet.Models;
         public Guid Id { get; set; }
         
         //one to one
-        public Guid WalletId { get; set; }
         public Wallet Wallet { get; set; } = null!;
         
         public string Username { get; set; } = null!;

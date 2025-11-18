@@ -1,14 +1,9 @@
 ﻿using VirtualWallet.Enums;
 
-namespace VirtualWallet.Models;
+namespace VirtualWallet.DTOs;
 
-public class Order
+public class OrderDTO
 {
-    public Guid Id { get; set; }
-    
-    // many to one
-    public Guid HoldingId { get; set; }
-    public Holding Holding { get; set; }
     public DateTime OrderDate { get; set; }
     public OrderType Type { get; set; }
     public float Price { get; set; }

@@ -16,4 +16,10 @@ public class StockRepository
     {
         return await _context.Stocks.ToListAsync();
     }
+    
+    public async Task UpdateAsync(Stock updatedStock)
+    { 
+        _context.Stocks.Update(updatedStock);
+        await _context.SaveChangesAsync();
+    }
 }
