@@ -8,9 +8,10 @@ public class Order
     
     // many to one
     public Guid HoldingId { get; set; }
-    public Holding Holding { get; set; }
-    public DateTime OrderDate { get; set; }
+    public required Holding Holding { get; set; }
+    public DateTime Date { get; set; }
     public OrderType Type { get; set; }
     public float Price { get; set; }
     public float Amount { get; set; }
+    public float Total { get; set; }
 }

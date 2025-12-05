@@ -22,11 +22,10 @@ namespace VirtualWallet.Repositories
             return await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
         }
 
-        public async Task<User> AddAsync(User user)
+        public async Task AddAsync(User user)
         {
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
-            return user;
         }
     }
 }

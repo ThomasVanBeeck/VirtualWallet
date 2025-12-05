@@ -43,14 +43,13 @@ public class UserService
         else return true;
     }
 
-    public async Task<UserDTO?> CreateUserAsync(UserRegisterDTO userRegisterDto)
+    public async Task CreateUserAsync(UserRegisterDTO userRegisterDto)
     {
         if (await _userRepository.GetByUsernameAsync(userRegisterDto.Username) != null)
         {
-            throw new Exception("Username already exists");
+            throw new InvalidOperationException("Username already exists");
         }
         var user = _mapper.Map<User>(userRegisterDto);
-        var newUser = await _userRepository.AddAsync(user);
-        return _mapper.Map<UserDTO>(newUser);
+        await _userRepository.AddAsync(user);
     }
 }

@@ -12,6 +12,13 @@ public class StockRepository
         _context = context;
     }
 
+    public async Task<Stock?> GetByNameAsync(string name)
+    {
+        return await _context.Stocks
+            .Where(s => s.StockName == name)
+            .FirstOrDefaultAsync();
+    }
+
     public async Task<List<Stock>> GetAllAsync()
     {
         return await _context.Stocks.ToListAsync();

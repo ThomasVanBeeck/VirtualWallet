@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using VirtualWallet.DTOs;
 using VirtualWallet.Services;
@@ -20,7 +19,7 @@ public class UserController : ControllerBase
     
     [Authorize(AuthenticationSchemes = "CookieAuth")]
     [HttpGet("current-user")]
-    public async Task<ActionResult<UserDTO?>> GetCurrentUser() 
+    public async Task<ActionResult<UserDTO>> GetCurrentUser() 
     {
         var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
         
@@ -47,7 +46,14 @@ public class UserController : ControllerBase
     [HttpPost("create-user")]
     public async Task<IActionResult> CreateUser([FromBody] UserRegisterDTO userRegisterDto)
     {
-        var newUser = await _userService.CreateUserAsync(userRegisterDto);
-        return Ok();
+        try
+        {
+            await _userService.CreateUserAsync(userRegisterDto);
+            return Ok();
+        }
+        catch (InvalidOperationException exception)
+        {
+            return BadRequest(new { message = exception.Message });
+        }
     }
 }

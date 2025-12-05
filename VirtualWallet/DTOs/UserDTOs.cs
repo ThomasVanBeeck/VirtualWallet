@@ -1,6 +1,5 @@
 ﻿namespace VirtualWallet.DTOs;
 
-
 public class UserDTO
 {
     public string Username { get; set; } = null!;

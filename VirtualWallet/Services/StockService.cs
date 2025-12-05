@@ -36,6 +36,11 @@ public class StockService
         }
     }
 
+    public async Task<Stock?> GetStockByNameAsync(string name)
+    {
+        return await _stockRepository.GetByNameAsync(name);
+    }
+
     public async Task<List<StockDTO>> GetAllStocks()
     {
         var stocks = await _stockRepository.GetAllAsync();

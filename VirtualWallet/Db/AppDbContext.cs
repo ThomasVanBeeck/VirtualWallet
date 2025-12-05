@@ -14,6 +14,7 @@ public class AppDbContext : DbContext
     public DbSet<Stock> Stocks { get; set; } = null!;
     public DbSet<User> Users { get; set; } = null!;
     public DbSet<Wallet> Wallets { get; set; } = null!;
+    public DbSet<Transfer> Transfers { get; set; } = null!;
     public DbSet<ScheduleTimer> ScheduleTimers { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

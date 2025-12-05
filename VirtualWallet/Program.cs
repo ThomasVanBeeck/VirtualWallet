@@ -23,19 +23,34 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod());
 });
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+    });
+
+builder.Services.AddScoped<HoldingRepository>();
+builder.Services.AddScoped<HoldingService>();
+
+builder.Services.AddScoped<OrderRepository>();
+builder.Services.AddScoped<OrderService>();
+
+builder.Services.AddScoped<StockRepository>();
+builder.Services.AddScoped<StockService>();
+
+builder.Services.AddScoped<TransferRepository>();
+builder.Services.AddScoped<TransferService>();
 
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<UserService>();
 
-builder.Services.AddScoped<StockRepository>();
-builder.Services.AddScoped<StockService>();
+builder.Services.AddScoped<WalletRepository>();
+builder.Services.AddScoped<WalletService>();
 
 builder.Services.AddScoped<ScheduleTimerRepository>();
 builder.Services.AddScoped<ISettingsService, ScheduleTimerService>();
 
 builder.Services.AddHostedService<StockUpdateScheduler>();
-
 
 builder.Services.AddEndpointsApiExplorer();
 //builder.Services.AddSwaggerGen();
@@ -67,8 +82,8 @@ if (app.Environment.IsDevelopment())
     //app.UseSwaggerUI();
     using (var scope = app.Services.CreateScope())
     {
-        // var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        // DbSeeder.Seed(db);
+        //var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        //DbSeeder.Seed(db);
     }
 }
 
