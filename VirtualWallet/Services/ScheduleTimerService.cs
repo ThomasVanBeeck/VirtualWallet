@@ -1,14 +1,13 @@
-﻿namespace VirtualWallet.Services;
-
-using Microsoft.EntityFrameworkCore;
+﻿using System.Globalization;
 using VirtualWallet.Models;
 using VirtualWallet.Repositories;
-using System.Globalization; // Nodig voor InvariantCulture
+
+namespace VirtualWallet.Services;
 
 public class ScheduleTimerService : ISettingsService
 {
-    private readonly ScheduleTimerRepository _scheduleTimerRepository;
     private const string TimestampKey = "LastStockUpdateTimestamp";
+    private readonly ScheduleTimerRepository _scheduleTimerRepository;
 
     public ScheduleTimerService(ScheduleTimerRepository scheduleTimerRepository)
     {
@@ -20,37 +19,29 @@ public class ScheduleTimerService : ISettingsService
         var scheduleTimer = await _scheduleTimerRepository.GetAsync(TimestampKey);
 
         if (scheduleTimer == null)
-        {
-            // If it doesn't exist yet, returns oldest date as value
-            return DateTime.MinValue; 
-        }
-        if (DateTime.TryParse(scheduleTimer.Value, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out var lastRunTime))
-        {
-            return lastRunTime.ToUniversalTime(); 
-        }
+            // Als het nog niet bestaat, oudst mogelijke datum instellen
+            return DateTime.MinValue;
+        if (DateTime.TryParse(scheduleTimer.Value, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal,
+                out var lastRunTime)) return lastRunTime.ToUniversalTime();
 
-        // fallback in case value is corrupt
-        return DateTime.MinValue; 
+        // Fallback in geval waarde corrupt is
+        return DateTime.MinValue;
     }
 
     public async Task SetLastUpdateTimestampAsync(DateTime timestamp)
     {
         var scheduleTimer = await _scheduleTimerRepository.GetAsync(TimestampKey);
-        
-        string timestampUtc = timestamp.ToUniversalTime().ToString("o", CultureInfo.InvariantCulture);
+
+        var timestampUtc = timestamp.ToUniversalTime().ToString("o", CultureInfo.InvariantCulture);
 
         if (scheduleTimer == null)
-        {
             scheduleTimer = new ScheduleTimer
             {
                 Key = TimestampKey,
                 Value = timestampUtc
             };
-        }
         else
-        {
             scheduleTimer.Value = timestampUtc;
-        }
 
         await _scheduleTimerRepository.UpdateOrAddAsync(scheduleTimer);
     }

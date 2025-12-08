@@ -9,19 +9,19 @@ namespace VirtualWallet.Services;
 public class TransferService
 {
     private readonly TransferRepository _transferRepository;
-    private readonly WalletService _walletService;
+    private readonly WalletRepository _walletRepository;
     private readonly IMapper _mapper;
 
-    public TransferService(TransferRepository transferRepository, WalletService walletService, IMapper mapper)
+    public TransferService(TransferRepository transferRepository, WalletRepository walletRepository, IMapper mapper)
     {
         _transferRepository = transferRepository;
-        _walletService = walletService;
+        _walletRepository = walletRepository;
         _mapper = mapper;
     }
 
     public async Task AddTransferAsync(Guid userId, TransferDTO transferDTO)
     {
-        var wallet = await _walletService.GetWalletByUserIdAsync(userId);
+        var wallet = await _walletRepository.GetByUserIdAsync(userId);
         
         if (wallet == null)
             throw new Exception("Wallet not found for user");
@@ -47,6 +47,9 @@ public class TransferService
             default:
                 throw new ArgumentOutOfRangeException();
         }
-        await _walletService.UpdateWalletAsync(wallet);
+        
+        // TODO hier nog TotalProfit en WinLossPct updaten
+        // adhv alle holdings wordt dit opnieuw berekend
+        await _walletRepository.UpdateAsync(wallet);
     }
 }

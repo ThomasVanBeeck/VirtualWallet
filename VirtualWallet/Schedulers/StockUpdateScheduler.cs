@@ -2,8 +2,6 @@
 
 namespace VirtualWallet.Schedulers;
 
-using Microsoft.Extensions.Hosting;
-
 public class StockUpdateScheduler : BackgroundService
 {
     private readonly IServiceProvider _serviceProvider;

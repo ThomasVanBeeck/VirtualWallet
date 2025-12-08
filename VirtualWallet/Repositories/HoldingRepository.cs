@@ -12,12 +12,23 @@ public class HoldingRepository
         _context = context;
     }
 
-    public async Task<Holding?> GetHoldingByWalletAndStockAsync(Guid stockId, Guid walletId)
+    public async Task<Holding?> GetByWalletAndStockAsync(Guid stockId, Guid walletId)
     {
         return await _context.Holdings
+            .Include(h => h.Stock)
+            .Include(h => h.Orders)
             .Where(h => h.StockId == stockId)
             .Where(h => h.WalletId == walletId)
             .FirstOrDefaultAsync();
+    }
+
+    public async Task<List<Holding>> GetByWalletIdAsync(Guid walletId)
+    {
+        return await _context.Holdings
+            .Include(h => h.Stock)
+            .Include(h => h.Orders)
+            .Where(h => h.WalletId == walletId)
+            .ToListAsync();
     }
 
     public async Task<Holding?> AddAsync(Holding holding)

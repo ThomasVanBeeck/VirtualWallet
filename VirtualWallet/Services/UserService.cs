@@ -9,11 +9,13 @@ namespace VirtualWallet.Services;
 public class UserService
 {
     private readonly UserRepository _userRepository;
+    private readonly WalletRepository _walletRepository;
     private readonly IMapper _mapper;
 
-    public UserService(UserRepository userRepository,  IMapper mapper)
+    public UserService(UserRepository userRepository, WalletRepository walletRepository,  IMapper mapper)
     {
         _userRepository = userRepository;
+        _walletRepository = walletRepository;
         _mapper = mapper;
     }
 
@@ -51,5 +53,11 @@ public class UserService
         }
         var user = _mapper.Map<User>(userRegisterDto);
         await _userRepository.AddAsync(user);
+        var wallet = new Wallet
+        {
+            Id = Guid.NewGuid(),
+            UserId = user.Id
+        };
+        await _walletRepository.AddAsync(wallet);
     }
 }

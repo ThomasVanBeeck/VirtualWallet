@@ -11,13 +11,11 @@ namespace VirtualWallet.Controllers;
 public class TransferController : ControllerBase
 {
     private readonly TransferService _transferService;
-    private readonly UserService _userService;
     
 
-    public TransferController(TransferService transferService, UserService userService)
+    public TransferController(TransferService transferService)
     {
         _transferService = transferService;
-        _userService = userService;
     }
 
     [Authorize(AuthenticationSchemes = "CookieAuth")]

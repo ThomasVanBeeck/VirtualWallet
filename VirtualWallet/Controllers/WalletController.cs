@@ -1,5 +1,4 @@
 ﻿using System.Security.Claims;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VirtualWallet.DTOs;
@@ -12,12 +11,10 @@ namespace VirtualWallet.Controllers;
 public class WalletController : ControllerBase
 {
     private readonly WalletService _walletService;
-    private readonly UserService _userService;
 
-    public WalletController(WalletService walletService, UserService userService)
+    public WalletController(WalletService walletService)
     {
         _walletService = walletService;
-        _userService = userService;
     }
 
     [Authorize(AuthenticationSchemes = "CookieAuth")]

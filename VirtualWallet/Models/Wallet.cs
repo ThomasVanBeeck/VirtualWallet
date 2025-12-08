@@ -10,6 +10,7 @@ public class Wallet
 
     public List<Holding> Holdings { get; set; } = new();
     public List<Transfer> Transfers { get; set; } = new();
+    public List<Order> Orders { get; set; } = new();
     public float TotalCash { get; set; } = 0f;
     public float TotalInStocks { get; set; } = 0f;
     public float TotalProfit { get; set; } = 0f;

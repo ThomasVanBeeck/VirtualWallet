@@ -11,6 +11,13 @@ public class MappingProfile : Profile
         CreateMap<User, UserDTO>();
         CreateMap<UserDTO, User>();
         CreateMap<Stock, StockDTO>();
+
+        CreateMap<Order, OrderDTO>()
+            .ForMember(
+                dest => dest.StockName, 
+                opt => opt.MapFrom(src => src.Holding.Stock.StockName)
+            );
+        
         CreateMap<Transfer, TransferSummaryDTO>();
         CreateMap<TransferDTO, Transfer>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
@@ -22,7 +29,16 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ForMember(dest => dest.Date, opt => opt.MapFrom(_ => DateTime.UtcNow))
             .ForMember(dest => dest.HoldingId, opt => opt.Ignore())
-            .ForMember(dest => dest.Holding, opt => opt.Ignore());
+            .ForMember(dest => dest.Holding, opt => opt.Ignore())
+            .ForMember(dest => dest.WalletId, opt => opt.Ignore())
+            .ForMember(dest => dest.Wallet, opt => opt.Ignore());
+
+        CreateMap<Holding, HoldingSummaryDTO>()
+            .ForMember(dest => dest.Amount, opt => opt.Ignore())
+            .ForMember(dest => dest.CurrentPrice, opt => opt.Ignore())
+            .ForMember(dest => dest.TotalValue, opt => opt.Ignore())
+            .ForMember(dest => dest.TotalProfit, opt => opt.Ignore())
+            .ForMember(dest => dest.WinLossPct, opt => opt.Ignore());
         
         CreateMap<Wallet,  WalletSummaryDTO>()
             .ForMember(dest => dest.TransferPage, opt => opt.Ignore());
@@ -31,6 +47,8 @@ public class MappingProfile : Profile
             .ForMember(
                 dest => dest.PasswordHash, 
                 opt => opt.MapFrom(src => BCrypt.Net.BCrypt.HashPassword(src.Password))
+                    )
+                    .ForMember(dest => dest.Id, opt => opt.MapFrom(_ => Guid.NewGuid())
             );
     }
 }

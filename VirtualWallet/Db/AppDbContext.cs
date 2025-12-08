@@ -48,6 +48,11 @@ public class AppDbContext : DbContext
             .HasMany(wallet => wallet.Transfers)
             .WithOne(transfer => transfer.Wallet)
             .HasForeignKey(transfer => transfer.WalletId);
-        
+
+        modelBuilder.Entity<Wallet>()
+            .HasMany(wallet => wallet.Orders)
+            .WithOne(order => order.Wallet)
+            .HasForeignKey(order => order.WalletId);
+
     }
 }
