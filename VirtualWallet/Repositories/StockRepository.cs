@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using VirtualWallet.Interfaces;
 
 namespace VirtualWallet.Repositories;
 using VirtualWallet.Models;
 
-public class StockRepository
+public class StockRepository: IStockRepository
 {
     private readonly AppDbContext _context;
 

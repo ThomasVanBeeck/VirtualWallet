@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using VirtualWallet.DTOs;
+using VirtualWallet.Dtos;
+using VirtualWallet.Interfaces;
 using VirtualWallet.Models;
 
 namespace VirtualWallet.Repositories;
 
-public class TransferRepository
+public class TransferRepository: ITransferRepository
 {
     private readonly AppDbContext _context;
 

@@ -1,6 +1,7 @@
 ﻿
 using AutoMapper;
-using VirtualWallet.DTOs;
+using VirtualWallet.Dtos;
+using VirtualWallet.Interfaces;
 using VirtualWallet.Models;
 using VirtualWallet.Repositories;
 
@@ -8,11 +9,11 @@ namespace VirtualWallet.Services;
 
 public class UserService
 {
-    private readonly UserRepository _userRepository;
-    private readonly WalletRepository _walletRepository;
+    private readonly IUserRepository _userRepository;
+    private readonly IWalletRepository _walletRepository;
     private readonly IMapper _mapper;
 
-    public UserService(UserRepository userRepository, WalletRepository walletRepository,  IMapper mapper)
+    public UserService(IUserRepository userRepository, IWalletRepository walletRepository, IMapper mapper)
     {
         _userRepository = userRepository;
         _walletRepository = walletRepository;
@@ -30,12 +31,12 @@ public class UserService
         return user;
     }
 
-    public async Task<UserDTO?> GetCurrentUserAsync(Guid id)
+    public async Task<UserDto?> GetCurrentUserAsync(Guid id)
     {
         var user = await _userRepository.GetByIdAsync(id);
         if (user == null) return null;
 
-        return _mapper.Map<UserDTO>(user);
+        return _mapper.Map<UserDto>(user);
     }
 
     public async Task<bool> GetUsernameExists(string username)
@@ -45,7 +46,7 @@ public class UserService
         else return true;
     }
 
-    public async Task CreateUserAsync(UserRegisterDTO userRegisterDto)
+    public async Task CreateUserAsync(UserRegisterDto userRegisterDto)
     {
         if (await _userRepository.GetByUsernameAsync(userRegisterDto.Username) != null)
         {

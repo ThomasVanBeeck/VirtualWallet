@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using VirtualWallet.Interfaces;
 using VirtualWallet.Models;
 
 namespace VirtualWallet.Repositories
 
 {
-    public class WalletRepository
+    public class WalletRepository: IWalletRepository
     {
         private readonly AppDbContext _context;
 

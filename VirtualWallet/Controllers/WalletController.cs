@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using VirtualWallet.DTOs;
+using VirtualWallet.Dtos;
 using VirtualWallet.Services;
 
 namespace VirtualWallet.Controllers;
@@ -19,7 +19,7 @@ public class WalletController : ControllerBase
 
     [Authorize(AuthenticationSchemes = "CookieAuth")]
     [HttpGet]
-    public async Task<ActionResult<WalletSummaryDTO>> GetWalletSummary(
+    public async Task<ActionResult<WalletSummaryDto>> GetWalletSummary(
         [FromQuery] int page = 1, [FromQuery] int size = 1)
     {
         var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);

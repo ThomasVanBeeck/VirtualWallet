@@ -9,6 +9,7 @@ public class Transfer
     public float Amount { get; set; }
     public DateTime Date { get; set; }
     
+    // many to one
     public Guid WalletId { get; set; }
     public Wallet Wallet { get; set; } = null!;
 }

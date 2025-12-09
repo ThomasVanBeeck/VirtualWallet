@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using VirtualWallet.Interfaces;
 using VirtualWallet.Models;
 
 namespace VirtualWallet.Repositories;
 
-public class HoldingRepository
+public class HoldingRepository: IHoldingRepository
 {
     private readonly AppDbContext _context;
 
@@ -38,7 +39,6 @@ public class HoldingRepository
             _context.Holdings.Add(holding);
             await _context.SaveChangesAsync();
             return holding;
-
         }
         catch
         {

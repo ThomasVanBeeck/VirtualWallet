@@ -2,7 +2,7 @@
 using VirtualWallet.Services;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
-using VirtualWallet.DTOs;
+using VirtualWallet.Dtos;
 
 namespace VirtualWallet.Controllers;
 
@@ -18,7 +18,7 @@ public class AuthController: ControllerBase
     }
     
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] UserLoginDTO dto)
+    public async Task<IActionResult> Login([FromBody] UserLoginDto dto)
     {
         var user = await _userService.LoginAsync(dto.Username, dto.Password);
             

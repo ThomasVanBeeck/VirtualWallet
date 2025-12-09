@@ -4,7 +4,7 @@ public class Wallet
 {
     public Guid Id { get; set; }
     
-    // one to one, wallet is dependent
+    // one to one, wallet is afhankelijk van user
     public Guid UserId { get; set; }
     public User User { get; set; } = null!;
 

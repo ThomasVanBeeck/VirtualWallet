@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
-using VirtualWallet.DTOs;
+using VirtualWallet.Dtos;
 using VirtualWallet.Services;
 
 namespace VirtualWallet.Controllers;
@@ -19,7 +19,7 @@ public class UserController : ControllerBase
     
     [Authorize(AuthenticationSchemes = "CookieAuth")]
     [HttpGet("current-user")]
-    public async Task<ActionResult<UserDTO>> GetCurrentUser() 
+    public async Task<ActionResult<UserDto>> GetCurrentUser() 
     {
         var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
         
@@ -44,7 +44,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("create-user")]
-    public async Task<IActionResult> CreateUser([FromBody] UserRegisterDTO userRegisterDto)
+    public async Task<IActionResult> CreateUser([FromBody] UserRegisterDto userRegisterDto)
     {
         try
         {

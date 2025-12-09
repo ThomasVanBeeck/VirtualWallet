@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
-using VirtualWallet.DTOs;
+using VirtualWallet.Dtos;
 using VirtualWallet.Services;
 
 namespace VirtualWallet.Controllers;
@@ -20,7 +20,7 @@ public class TransferController : ControllerBase
 
     [Authorize(AuthenticationSchemes = "CookieAuth")]
     [HttpPost]
-    public async Task<IActionResult> AddTransfer([FromBody] TransferDTO transferDTO)
+    public async Task<IActionResult> AddTransfer([FromBody] TransferDto transferDTO)
     {
         var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
 

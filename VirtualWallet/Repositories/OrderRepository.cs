@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using VirtualWallet.Interfaces;
 using VirtualWallet.Models;
 
 namespace VirtualWallet.Repositories;
 
-public class OrderRepository
+public class OrderRepository: IOrderRepository
 {
     private readonly AppDbContext _context;
 

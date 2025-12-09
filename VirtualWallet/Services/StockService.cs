@@ -1,10 +1,10 @@
 ﻿using System.Globalization;
 using System.Text.Json;
 using AutoMapper;
-using VirtualWallet.DTOs;
+using VirtualWallet.Dtos;
 using VirtualWallet.Enums;
+using VirtualWallet.Interfaces;
 using VirtualWallet.Models.ExternalAPIs;
-using VirtualWallet.Repositories;
 
 namespace VirtualWallet.Services;
 
@@ -16,10 +16,10 @@ public class StockService
     private readonly HttpClient _http;
     private readonly IMapper _mapper;
     private readonly ISettingsService _settingsService;
-    private readonly StockRepository _stockRepository;
+    private readonly IStockRepository _stockRepository;
     private readonly TimeSpan _updateInterval = TimeSpan.FromHours(24);
 
-    public StockService(StockRepository stockRepository, IMapper mapper, IConfiguration config, HttpClient http,
+    public StockService(IStockRepository stockRepository, IMapper mapper, IConfiguration config, HttpClient http,
         ISettingsService settingsService)
     {
         _stockRepository = stockRepository;
@@ -33,10 +33,10 @@ public class StockService
             throw new InvalidOperationException("ApiKeys:AlphaVantage is not configured.");
     }
 
-    public async Task<List<StockDTO>> GetAllStocks()
+    public async Task<List<StockDto>> GetAllStocks()
     {
         var stocks = await _stockRepository.GetAllAsync();
-        return _mapper.Map<List<StockDTO>>(stocks);
+        return _mapper.Map<List<StockDto>>(stocks);
     }
 
     public async Task UpdateStockPrices()
@@ -51,10 +51,10 @@ public class StockService
         {
             var stocks = await _stockRepository.GetAllAsync();
             {
-                for (var i = 0; i < stocks.Count; i++)
+                foreach (var t in stocks)
                 {
-                    var symbol = stocks[i].Symbol;
-                    var stockType = stocks[i].Type;
+                    var symbol = t.Symbol;
+                    var stockType = t.Type;
                     try
                     {
                         Console.WriteLine($"Updating stock price of {symbol}...");
@@ -92,7 +92,7 @@ public class StockService
 
                         var changePct24Hr = 100f * (dayPrice / previousDayPrice - 1f);
 
-                        var currentStock = stocks[i];
+                        var currentStock = t;
                         currentStock.ChangePct24Hr = changePct24Hr;
                         currentStock.PricePerShare = dayPrice;
                         await _stockRepository.UpdateAsync(currentStock);

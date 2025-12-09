@@ -1,15 +1,15 @@
 ﻿using System.Globalization;
+using VirtualWallet.Interfaces;
 using VirtualWallet.Models;
-using VirtualWallet.Repositories;
 
 namespace VirtualWallet.Services;
 
 public class ScheduleTimerService : ISettingsService
 {
     private const string TimestampKey = "LastStockUpdateTimestamp";
-    private readonly ScheduleTimerRepository _scheduleTimerRepository;
+    private readonly IScheduleTimerRepository _scheduleTimerRepository;
 
-    public ScheduleTimerService(ScheduleTimerRepository scheduleTimerRepository)
+    public ScheduleTimerService(IScheduleTimerRepository scheduleTimerRepository)
     {
         _scheduleTimerRepository = scheduleTimerRepository;
     }

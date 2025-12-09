@@ -1,10 +1,10 @@
 ﻿using VirtualWallet.Enums;
 
-namespace VirtualWallet.DTOs;
+namespace VirtualWallet.Dtos;
 
-public class OrderDTO
+public class OrderDto
 {
-    public string StockName { get; set; }
+    public required string StockName { get; set; }
     public DateTime Date { get; set; }
     public OrderType Type { get; set; }
     public float Price { get; set; }
@@ -12,17 +12,17 @@ public class OrderDTO
     public float Total  { get; set; }
 }
 
-public class OrderPostDTO
+public class OrderPostDto
 {
-    public string StockName { get; set; }
+    public required string StockName { get; set; }
     public OrderType Type { get; set; }
     public float Price { get; set; }
     public float Amount { get; set; }
 }
 
-public class OrdersPaginatedDTO
+public class OrdersPaginatedDto
 {
-    public List<OrderDTO> Orders { get; set; } = new();
+    public List<OrderDto> Orders { get; set; } = new();
     public float PageNumber { get; set; }
     public float TotalPages { get; set; }
 }

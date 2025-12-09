@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using VirtualWallet.Models;
-using VirtualWallet.DTOs;
+using VirtualWallet.Dtos;
 
 namespace VirtualWallet.Mapping;
 
@@ -8,24 +8,24 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<User, UserDTO>();
-        CreateMap<UserDTO, User>();
-        CreateMap<Stock, StockDTO>();
+        CreateMap<User, UserDto>();
+        CreateMap<UserDto, User>();
+        CreateMap<Stock, StockDto>();
 
-        CreateMap<Order, OrderDTO>()
+        CreateMap<Order, OrderDto>()
             .ForMember(
                 dest => dest.StockName, 
                 opt => opt.MapFrom(src => src.Holding.Stock.StockName)
             );
         
-        CreateMap<Transfer, TransferSummaryDTO>();
-        CreateMap<TransferDTO, Transfer>()
+        CreateMap<Transfer, TransferSummaryDto>();
+        CreateMap<TransferDto, Transfer>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ForMember(dest => dest.Date, opt => opt.MapFrom(_ => DateTime.UtcNow))
             .ForMember(dest => dest.WalletId, opt => opt.Ignore())
             .ForMember(dest => dest.Wallet, opt => opt.Ignore());
         
-        CreateMap<OrderPostDTO, Order>()
+        CreateMap<OrderPostDto, Order>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ForMember(dest => dest.Date, opt => opt.MapFrom(_ => DateTime.UtcNow))
             .ForMember(dest => dest.HoldingId, opt => opt.Ignore())
@@ -33,17 +33,17 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.WalletId, opt => opt.Ignore())
             .ForMember(dest => dest.Wallet, opt => opt.Ignore());
 
-        CreateMap<Holding, HoldingSummaryDTO>()
+        CreateMap<Holding, HoldingSummaryDto>()
             .ForMember(dest => dest.Amount, opt => opt.Ignore())
             .ForMember(dest => dest.CurrentPrice, opt => opt.Ignore())
             .ForMember(dest => dest.TotalValue, opt => opt.Ignore())
             .ForMember(dest => dest.TotalProfit, opt => opt.Ignore())
             .ForMember(dest => dest.WinLossPct, opt => opt.Ignore());
         
-        CreateMap<Wallet,  WalletSummaryDTO>()
+        CreateMap<Wallet,  WalletSummaryDto>()
             .ForMember(dest => dest.TransferPage, opt => opt.Ignore());
         
-        CreateMap<UserRegisterDTO, User>()
+        CreateMap<UserRegisterDto, User>()
             .ForMember(
                 dest => dest.PasswordHash, 
                 opt => opt.MapFrom(src => BCrypt.Net.BCrypt.HashPassword(src.Password))

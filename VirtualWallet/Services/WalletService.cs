@@ -1,19 +1,18 @@
 ﻿using AutoMapper;
-using VirtualWallet.DTOs;
+using VirtualWallet.Dtos;
 using VirtualWallet.Enums;
-using VirtualWallet.Models;
-using VirtualWallet.Repositories;
+using VirtualWallet.Interfaces;
 
 namespace VirtualWallet.Services;
 
 public class WalletService
 {
-    private readonly HoldingRepository _holdingRepository;
-    private readonly TransferRepository _transferRepository;
-    private readonly WalletRepository _walletRepository;
+    private readonly IHoldingRepository _holdingRepository;
+    private readonly ITransferRepository _transferRepository;
+    private readonly IWalletRepository _walletRepository;
     private readonly IMapper _mapper;
 
-    public WalletService(HoldingRepository holdingRepository, TransferRepository transferRepository, WalletRepository walletRepository, IMapper mapper)
+    public WalletService(IHoldingRepository holdingRepository, ITransferRepository transferRepository, IWalletRepository walletRepository, IMapper mapper)
     {
         _holdingRepository = holdingRepository;
         _transferRepository = transferRepository;
@@ -21,12 +20,7 @@ public class WalletService
         _mapper = mapper;
     }
 
-    public Task<Wallet?> GetWalletByUserIdAsync(Guid userId)
-    {
-        return _walletRepository.GetByUserIdAsync(userId);
-    }
-
-    public async Task<WalletSummaryDTO> GetWalletSummaryAsync(Guid userId, int page, int size)
+    public async Task<WalletSummaryDto> GetWalletSummaryAsync(Guid userId, int page, int size)
     {
         // TODO hier moet ook nog de nieuwe TotalProfit en WinLossPct geupdated worden
         // adhv alle holdings berekenen
@@ -35,19 +29,19 @@ public class WalletService
         if (wallet == null)
             throw new Exception("Wallet not found");
         
-        var walletSummaryDTO = _mapper.Map<WalletSummaryDTO>(wallet);
+        var walletSummaryDto = _mapper.Map<WalletSummaryDto>(wallet);
         var transfersPaginatedResult = await _transferRepository.GetByWalletIdPaginatedAsync(wallet.Id, page, size);
-        var itemsDTO = _mapper.Map<List<TransferSummaryDTO>>(transfersPaginatedResult.Items);
-        var transferPage = new TransfersPaginatedDTO
+        var itemsDto = _mapper.Map<List<TransferSummaryDto>>(transfersPaginatedResult.Items);
+        var transferPage = new TransfersPaginatedDto
         {
-            Transfers = itemsDTO,
+            Transfers = itemsDto,
             PageNumber = transfersPaginatedResult.CurrentPage,
             TotalPages = transfersPaginatedResult.TotalPages
         };
-        walletSummaryDTO.TransferPage = transferPage;
+        walletSummaryDto.TransferPage = transferPage;
 
         var holdings = await _holdingRepository.GetByWalletIdAsync(wallet.Id);
-        var holdingsSummaryDTO = _mapper.Map<List<HoldingSummaryDTO>>(holdings);
+        var holdingsSummaryDto = _mapper.Map<List<HoldingSummaryDto>>(holdings);
         for (int i = 0; i < holdings.Count(); i++)
         {
             var buys = holdings[i].Orders.Where(o => o.Type == OrderType.Buy);
@@ -63,22 +57,22 @@ public class WalletService
             
             var currentPrice = holdings[i].Stock.PricePerShare;
             
-            holdingsSummaryDTO[i].StockName = holdings[i].Stock.StockName;
-            holdingsSummaryDTO[i].Amount = amount;
-            holdingsSummaryDTO[i].CurrentPrice = currentPrice;
-            holdingsSummaryDTO[i].TotalValue = totalValue;
+            holdingsSummaryDto[i].StockName = holdings[i].Stock.StockName;
+            holdingsSummaryDto[i].Amount = amount;
+            holdingsSummaryDto[i].CurrentPrice = currentPrice;
+            holdingsSummaryDto[i].TotalValue = totalValue;
             if (amount == 0.0f)
             {
-                holdingsSummaryDTO[i].TotalProfit = 0.0f;
-                holdingsSummaryDTO[i].WinLossPct = 0.0f;
+                holdingsSummaryDto[i].TotalProfit = 0.0f;
+                holdingsSummaryDto[i].WinLossPct = 0.0f;
             }
             else
             {
-                holdingsSummaryDTO[i].TotalProfit = totalValue - (amount * currentPrice);
-                holdingsSummaryDTO[i].WinLossPct = totalValue / (amount * currentPrice) - 1.0f;
+                holdingsSummaryDto[i].TotalProfit = totalValue - (amount * currentPrice);
+                holdingsSummaryDto[i].WinLossPct = totalValue / (amount * currentPrice) - 1.0f;
             }
         }
-        walletSummaryDTO.Holdings = holdingsSummaryDTO;
-        return  walletSummaryDTO;
+        walletSummaryDto.Holdings = holdingsSummaryDto;
+        return  walletSummaryDto;
     }
 }

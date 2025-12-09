@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using VirtualWallet.Services;
 
 namespace VirtualWallet.Controllers;
-using VirtualWallet.DTOs;
+using Dtos;
 
 [ApiController]
 [Route("api/[controller]")]

@@ -55,6 +55,7 @@ public static class DbSeeder
                 );
         }
 
+        
         var user1 = new User
         {
             Id = Guid.NewGuid(),

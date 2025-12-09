@@ -1,24 +1,24 @@
 ﻿using System.Runtime.InteropServices.JavaScript;
 using VirtualWallet.Enums;
 
-namespace VirtualWallet.DTOs;
+namespace VirtualWallet.Dtos;
 
-public class TransferDTO
+public class TransferDto
 {
     public TransferType Type { get; set; }
     public float Amount { get; set; }
 }
 
-public class TransferSummaryDTO
+public class TransferSummaryDto
 {
     public float Amount { get; set; }
     public DateTime Date { get; set; }
     public TransferType Type { get; set; }
 }
 
-public class TransfersPaginatedDTO
+public class TransfersPaginatedDto
 {
-    public List<TransferSummaryDTO> Transfers { get; set; } = new();
+    public List<TransferSummaryDto> Transfers { get; set; } = new();
     public float PageNumber { get; set; }
     public float TotalPages { get; set; }
 }

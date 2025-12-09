@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
+using VirtualWallet.Interfaces;
 using VirtualWallet.Repositories;
 using VirtualWallet.Schedulers;
 using VirtualWallet.Services;
@@ -17,7 +18,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("LocalAngular",
         policy => policy
-            .WithOrigins("http://localhost:4200") // Angular default
+            .WithOrigins("http://localhost:4200") // Angular standaard poort
             .AllowCredentials()
             .AllowAnyHeader()
             .AllowAnyMethod());
@@ -29,25 +30,25 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
     });
 
-builder.Services.AddScoped<HoldingRepository>();
+builder.Services.AddScoped<IHoldingRepository, HoldingRepository>();
 builder.Services.AddScoped<HoldingService>();
 
-builder.Services.AddScoped<OrderRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<OrderService>();
 
-builder.Services.AddScoped<StockRepository>();
+builder.Services.AddScoped<IStockRepository, StockRepository>();
 builder.Services.AddScoped<StockService>();
 
-builder.Services.AddScoped<TransferRepository>();
+builder.Services.AddScoped<ITransferRepository, TransferRepository>();
 builder.Services.AddScoped<TransferService>();
 
-builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<UserService>();
 
-builder.Services.AddScoped<WalletRepository>();
+builder.Services.AddScoped<IWalletRepository, WalletRepository>();
 builder.Services.AddScoped<WalletService>();
 
-builder.Services.AddScoped<ScheduleTimerRepository>();
+builder.Services.AddScoped<IScheduleTimerRepository, ScheduleTimerRepository>();
 builder.Services.AddScoped<ISettingsService, ScheduleTimerService>();
 
 builder.Services.AddHostedService<StockUpdateScheduler>();

@@ -1,21 +1,21 @@
 ﻿using AutoMapper;
-using VirtualWallet.DTOs;
+using VirtualWallet.Dtos;
 using VirtualWallet.Enums;
+using VirtualWallet.Interfaces;
 using VirtualWallet.Models;
-using VirtualWallet.Repositories;
 
 namespace VirtualWallet.Services;
 
 public class OrderService
 {
-    private readonly HoldingRepository _holdingRepository;
-    private readonly OrderRepository _orderRepository;
-    private readonly WalletRepository _walletRepository;
-    private readonly StockRepository _stockRepository;
+    private readonly IHoldingRepository _holdingRepository;
+    private readonly IOrderRepository _orderRepository;
+    private readonly IWalletRepository _walletRepository;
+    private readonly IStockRepository _stockRepository;
     private readonly IMapper _mapper;
 
-    public OrderService(HoldingRepository holdingRepository, OrderRepository orderRepository, WalletRepository walletRepository,
-        StockRepository stockRepository,
+    public OrderService(IHoldingRepository holdingRepository, IOrderRepository orderRepository, IWalletRepository walletRepository,
+        IStockRepository stockRepository,
         IMapper mapper)
     {
         _holdingRepository = holdingRepository;
@@ -25,34 +25,34 @@ public class OrderService
         _mapper = mapper;
     }
 
-    public async Task AddOrderAsync(Guid userId, OrderPostDTO orderPostDTO)
+    public async Task AddOrderAsync(Guid userId, OrderPostDto orderPostDto)
     {
         var wallet = await _walletRepository.GetByUserIdAsync(userId);
         
         if (wallet == null)
             throw new Exception("Wallet not found for user");
         
-        var stock = await _stockRepository.GetByNameAsync(orderPostDTO.StockName);
+        var stock = await _stockRepository.GetByNameAsync(orderPostDto.StockName);
         
         if (stock == null)
             throw new Exception("Stock not found");
 
         var holding = await _holdingRepository.GetByWalletAndStockAsync(stock.Id, wallet.Id);
 
-        if (holding != null && orderPostDTO.Type == OrderType.Sell)
+        if (holding != null && orderPostDto.Type == OrderType.Sell)
         {
             var buys = holding.Orders.Where(o => o.Type == OrderType.Buy);
             var sells = holding.Orders.Where(o => o.Type == OrderType.Sell);
             var totalBought = buys.Sum(b => b.Amount);
             var totalSold = sells.Sum(s => s.Amount);
             var amount = totalBought - totalSold;
-            if (amount < orderPostDTO.Amount)
+            if (amount < orderPostDto.Amount)
                 throw new Exception("Insufficient stocks available to sell");
         }
 
         else if (holding == null)
         {
-            if (holding == null && orderPostDTO.Type == OrderType.Sell)
+            if (holding == null && orderPostDto.Type == OrderType.Sell)
                 throw new Exception("No stocks available to sell.");
             
             Holding newHolding = new Holding()
@@ -66,24 +66,24 @@ public class OrderService
                 throw new Exception("Holding not found and unable to create holding.");
         }
         
-        float totalValue = orderPostDTO.Amount * orderPostDTO.Price;
-        if (orderPostDTO.Type == OrderType.Buy)
+        float totalValue = orderPostDto.Amount * orderPostDto.Price;
+        if (orderPostDto.Type == OrderType.Buy)
         {
             if (totalValue > wallet.TotalCash)
                 throw new Exception("Insufficient funds");
         }
         
-        var entity = _mapper.Map<Order>(orderPostDTO);
+        var entity = _mapper.Map<Order>(orderPostDto);
 
         entity.Id = Guid.NewGuid();
         entity.HoldingId = holding.Id;
         entity.WalletId = wallet.Id;
-        var total = orderPostDTO.Amount * orderPostDTO.Price;
+        var total = orderPostDto.Amount * orderPostDto.Price;
         
         entity.Total = total;
         await _orderRepository.AddAsync(entity);
 
-        switch (orderPostDTO.Type)
+        switch (orderPostDto.Type)
         {
             case OrderType.Buy:
                 wallet.TotalCash -= total;
@@ -100,17 +100,17 @@ public class OrderService
         await _walletRepository.UpdateAsync(wallet); 
     }
 
-    public async Task<OrdersPaginatedDTO> GetOrdersAsync(Guid userId, int page, int size)
+    public async Task<OrdersPaginatedDto> GetOrdersAsync(Guid userId, int page, int size)
     {
         var wallet = await _walletRepository.GetByUserIdAsync(userId);
         if (wallet == null)
             throw new Exception("Wallet not found");
         
         var ordersPaginatedResult = await _orderRepository.GetOrdersByWalletIdAsync(wallet.Id, page, size);
-        var itemsDTO = _mapper.Map<List<OrderDTO>>(ordersPaginatedResult.Items);
-        var orderPage = new OrdersPaginatedDTO
+        var itemsDto = _mapper.Map<List<OrderDto>>(ordersPaginatedResult.Items);
+        var orderPage = new OrdersPaginatedDto
         {
-            Orders = itemsDTO,
+            Orders = itemsDto,
             PageNumber = ordersPaginatedResult.CurrentPage,
             TotalPages = ordersPaginatedResult.TotalPages
         };

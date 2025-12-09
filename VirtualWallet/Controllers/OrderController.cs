@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using VirtualWallet.DTOs;
+using VirtualWallet.Dtos;
 using VirtualWallet.Services;
 
 namespace VirtualWallet.Controllers;
@@ -20,7 +20,7 @@ public class OrderController : ControllerBase
 
     [Authorize(AuthenticationSchemes = "CookieAuth")]
     [HttpPost]
-    public async Task<IActionResult> AddOrder([FromBody] OrderPostDTO orderPostDTO)
+    public async Task<IActionResult> AddOrder([FromBody] OrderPostDto orderPostDTO)
     {
         var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
