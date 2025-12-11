@@ -47,9 +47,6 @@ public class TransferService
             default:
                 throw new ArgumentOutOfRangeException();
         }
-        
-        // TODO hier nog TotalProfit en WinLossPct updaten
-        // adhv alle holdings wordt dit opnieuw berekend
         await _walletRepository.UpdateAsync(wallet);
     }
 }

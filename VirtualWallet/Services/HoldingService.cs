@@ -10,4 +10,6 @@ public class HoldingService
     {
         _holdingRepository = holdingRepository;
     }
+    
+    // Holding service is (op dit moment) nog leeg.
 }

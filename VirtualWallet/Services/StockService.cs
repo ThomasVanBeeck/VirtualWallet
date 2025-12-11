@@ -15,16 +15,19 @@ public class StockService
     private readonly string _apiUrlStock;
     private readonly HttpClient _http;
     private readonly IMapper _mapper;
+    private readonly IScheduleTimerRepository _scheduleTimerRepository;
     private readonly ISettingsService _settingsService;
     private readonly IStockRepository _stockRepository;
     private readonly TimeSpan _updateInterval = TimeSpan.FromHours(24);
+    private const string TimestampKey = "LastStockUpdateTimestamp";
 
     public StockService(IStockRepository stockRepository, IMapper mapper, IConfiguration config, HttpClient http,
-        ISettingsService settingsService)
+        IScheduleTimerRepository scheduleTimerRepository ,ISettingsService settingsService)
     {
         _stockRepository = stockRepository;
         _mapper = mapper;
         _http = http;
+        _scheduleTimerRepository =  scheduleTimerRepository;
         _settingsService = settingsService;
         _apiUrlStock = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY";
         _apiUrlCrypto = "https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&market=USD";
@@ -109,5 +112,39 @@ public class StockService
             }
             await _settingsService.SetLastUpdateTimestampAsync(DateTime.UtcNow);
         }
+    }
+
+    public async Task<StockUpdateDto> GetLastUpdateTimestamp()
+    {
+        const string displayFormat = "yyyy-MM-dd HH:mm:ss"; 
+        
+        var scheduleTimer = await _scheduleTimerRepository.GetAsync(TimestampKey);
+    
+        DateTime lastRunTimeUtc;
+        
+        if (scheduleTimer == null)
+        {
+            lastRunTimeUtc = DateTime.MinValue;
+        }
+        else if (DateTime.TryParse(
+                     scheduleTimer.Value, 
+                     CultureInfo.InvariantCulture, 
+                     DateTimeStyles.RoundtripKind,
+                     out var parsedTime)
+                )
+        {
+            lastRunTimeUtc = parsedTime; 
+        }
+        else
+        {
+            lastRunTimeUtc = DateTime.MinValue;
+        }
+        
+        var stockUpdateDto = new StockUpdateDto
+        {
+            LastUpdate = lastRunTimeUtc.ToString(displayFormat, CultureInfo.InvariantCulture)
+        };
+    
+        return stockUpdateDto;
     }
 }

@@ -8,3 +8,8 @@ public class StockDto
     public float PricePerShare { get; set; }
     public float ChangePct24Hr { get; set; }
 }
+
+public class StockUpdateDto
+{
+    public required string LastUpdate { get; set; }
+}

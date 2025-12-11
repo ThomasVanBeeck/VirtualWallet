@@ -23,4 +23,12 @@ public class StockController :  ControllerBase
         var stocks = await _stockService.GetAllStocks();
         return Ok(stocks);
     }
+
+    [Authorize(AuthenticationSchemes = "CookieAuth")]
+    [HttpGet("lastupdate")]
+    public async Task<IActionResult> GetLastUpdateTimestamp()
+    {
+        var stockUpdateDto = await _stockService.GetLastUpdateTimestamp();
+        return Ok(stockUpdateDto);
+    }
 }

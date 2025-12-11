@@ -31,7 +31,8 @@ builder.Services.AddControllers()
     });
 
 builder.Services.AddScoped<IHoldingRepository, HoldingRepository>();
-builder.Services.AddScoped<HoldingService>();
+// holding service is (op dit moment) nog leeg, dus niet nodig
+//builder.Services.AddScoped<HoldingService>();
 
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<OrderService>();

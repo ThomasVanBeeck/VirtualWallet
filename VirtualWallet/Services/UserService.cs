@@ -35,8 +35,7 @@ public class UserService
     {
         var user = await _userRepository.GetByIdAsync(id);
         if (user == null) return null;
-
-        return _mapper.Map<UserDto>(user);
+        else return _mapper.Map<UserDto>(user);
     }
 
     public async Task<bool> GetUsernameExists(string username)

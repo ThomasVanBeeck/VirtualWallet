@@ -19,60 +19,108 @@ public class WalletService
         _walletRepository = walletRepository;
         _mapper = mapper;
     }
-
+    
+    public class Lot
+    {
+        public float Amount { get; set; }
+        public float PricePerShare { get; set; }
+    }
+    
     public async Task<WalletSummaryDto> GetWalletSummaryAsync(Guid userId, int page, int size)
     {
-        // TODO hier moet ook nog de nieuwe TotalProfit en WinLossPct geupdated worden
-        // adhv alle holdings berekenen
-        
         var wallet = await _walletRepository.GetByUserIdAsync(userId);
         if (wallet == null)
             throw new Exception("Wallet not found");
-        
+
         var walletSummaryDto = _mapper.Map<WalletSummaryDto>(wallet);
+
         var transfersPaginatedResult = await _transferRepository.GetByWalletIdPaginatedAsync(wallet.Id, page, size);
         var itemsDto = _mapper.Map<List<TransferSummaryDto>>(transfersPaginatedResult.Items);
-        var transferPage = new TransfersPaginatedDto
+        walletSummaryDto.TransferPage = new TransfersPaginatedDto
         {
             Transfers = itemsDto,
             PageNumber = transfersPaginatedResult.CurrentPage,
             TotalPages = transfersPaginatedResult.TotalPages
         };
-        walletSummaryDto.TransferPage = transferPage;
 
         var holdings = await _holdingRepository.GetByWalletIdAsync(wallet.Id);
-        var holdingsSummaryDto = _mapper.Map<List<HoldingSummaryDto>>(holdings);
-        for (int i = 0; i < holdings.Count(); i++)
-        {
-            var buys = holdings[i].Orders.Where(o => o.Type == OrderType.Buy);
-            var sells = holdings[i].Orders.Where(o => o.Type == OrderType.Sell);
-            
-            var totalBought = buys.Sum(b => b.Amount);
-            var totalSold =  sells.Sum(s => s.Amount);
-            var amount = totalBought - totalSold;
+        var holdingSummaryDtoList = _mapper.Map<List<HoldingSummaryDto>>(holdings);
 
-            var totalValueBought = buys.Sum(b => b.Total);
-            var totalValueSold = sells.Sum(s => s.Total);
-            var totalValue = totalValueBought - totalValueSold;
-            
-            var currentPrice = holdings[i].Stock.PricePerShare;
-            
-            holdingsSummaryDto[i].StockName = holdings[i].Stock.StockName;
-            holdingsSummaryDto[i].Amount = amount;
-            holdingsSummaryDto[i].CurrentPrice = currentPrice;
-            holdingsSummaryDto[i].TotalValue = totalValue;
-            if (amount == 0.0f)
+        for (int i = 0; i < holdings.Count; i++)
+        {
+            var orders = holdings[i].Orders
+                .OrderBy(o => o.Date)
+                .ToList();
+
+            var lots = new Queue<Lot>();
+
+            foreach (var order in orders)
             {
-                holdingsSummaryDto[i].TotalProfit = 0.0f;
-                holdingsSummaryDto[i].WinLossPct = 0.0f;
+                if (order.Type == OrderType.Buy)
+                {
+                    lots.Enqueue(new Lot
+                    {
+                        Amount = order.Amount,
+                        PricePerShare = order.Total / order.Amount
+                    });
+                }
+                else if (order.Type == OrderType.Sell)
+                {
+                    var amountToSell = order.Amount;
+                    while (amountToSell > 0 && lots.Count > 0)
+                    {
+                        var lot = lots.Peek();
+                        if (lot.Amount <= amountToSell)
+                        {
+                            amountToSell -= lot.Amount;
+                            lots.Dequeue();
+                        }
+                        else
+                        {
+                            lot.Amount -= amountToSell;
+                            amountToSell = 0;
+                        }
+                    }
+                }
+            }
+
+            var remainingAmount = lots.Sum(l => l.Amount);
+            var totalCost = lots.Sum(l => l.Amount * l.PricePerShare);
+            var currentPrice = holdings[i].Stock.PricePerShare;
+
+            holdingSummaryDtoList[i].StockName = holdings[i].Stock.StockName;
+            holdingSummaryDtoList[i].Amount = remainingAmount;
+            holdingSummaryDtoList[i].CurrentPrice = currentPrice;
+            holdingSummaryDtoList[i].TotalValue = remainingAmount * currentPrice;
+
+            if (remainingAmount <= 0 || totalCost <= 0)
+            {
+                holdingSummaryDtoList[i].TotalProfit = 0f;
+                holdingSummaryDtoList[i].WinLossPct = 0f;
             }
             else
             {
-                holdingsSummaryDto[i].TotalProfit = totalValue - (amount * currentPrice);
-                holdingsSummaryDto[i].WinLossPct = totalValue / (amount * currentPrice) - 1.0f;
+                holdingSummaryDtoList[i].TotalProfit = (currentPrice * remainingAmount) - totalCost;
+                holdingSummaryDtoList[i].WinLossPct = (holdingSummaryDtoList[i].TotalProfit / totalCost) * 100f;
             }
         }
-        walletSummaryDto.Holdings = holdingsSummaryDto;
-        return  walletSummaryDto;
+
+        walletSummaryDto.Holdings = holdingSummaryDtoList;
+
+        walletSummaryDto.TotalProfit = holdingSummaryDtoList.Sum(h => h.TotalProfit);
+        walletSummaryDto.TotalInStocks = holdingSummaryDtoList.Sum(h => h.TotalValue);
+        
+        var totalValue = walletSummaryDto.TotalInStocks;
+        if (totalValue > 0)
+        {
+            var weightedWinLoss = holdingSummaryDtoList
+                .Sum(h => (h.TotalValue / totalValue) * h.WinLossPct);
+            walletSummaryDto.WinLossPct = weightedWinLoss;
+        }
+        else
+        {
+            walletSummaryDto.WinLossPct = 0f;
+        }
+        return walletSummaryDto;
     }
 }

@@ -22,7 +22,7 @@ public class ScheduleTimerService : ISettingsService
             // Als het nog niet bestaat, oudst mogelijke datum instellen
             return DateTime.MinValue;
         if (DateTime.TryParse(scheduleTimer.Value, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal,
-                out var lastRunTime)) return lastRunTime.ToUniversalTime();
+                out var lastRunTime)) return lastRunTime;
 
         // Fallback in geval waarde corrupt is
         return DateTime.MinValue;
