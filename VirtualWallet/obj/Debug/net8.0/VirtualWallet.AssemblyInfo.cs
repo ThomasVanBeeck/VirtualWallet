@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("VirtualWallet")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c5dd0bbf15d3e45d1a6f86debe38c87fa19a8b0d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e04c18810685e3f96243db21d0bf9e068056cb00")]
 [assembly: System.Reflection.AssemblyProductAttribute("VirtualWallet")]
 [assembly: System.Reflection.AssemblyTitleAttribute("VirtualWallet")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
