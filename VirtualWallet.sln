@@ -1,6 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# 
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtualWallet", "VirtualWallet\VirtualWallet.csproj", "{932FAFD0-1AEC-4C39-B51A-14EFE7B03917}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtualWallet.Tests", "VirtualWallet.Tests\VirtualWallet.Tests.csproj", "{0F5F47FE-CBEB-4DD6-B4ED-8846CBD93D99}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,5 +15,9 @@ Global
 		{932FAFD0-1AEC-4C39-B51A-14EFE7B03917}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{932FAFD0-1AEC-4C39-B51A-14EFE7B03917}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{932FAFD0-1AEC-4C39-B51A-14EFE7B03917}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F5F47FE-CBEB-4DD6-B4ED-8846CBD93D99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F5F47FE-CBEB-4DD6-B4ED-8846CBD93D99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F5F47FE-CBEB-4DD6-B4ED-8846CBD93D99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F5F47FE-CBEB-4DD6-B4ED-8846CBD93D99}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
