@@ -2,11 +2,14 @@
 using VirtualWallet.Services;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using VirtualWallet.Dtos;
 
 namespace VirtualWallet.Controllers;
 
+
 [ApiController]
+[Authorize(AuthenticationSchemes = "CookieAuth")]
 [Route("api/[controller]")]
 public class AuthController: ControllerBase
 {
@@ -17,6 +20,7 @@ public class AuthController: ControllerBase
         _userService = userService;
     }
     
+    [AllowAnonymous]
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] UserLoginDto dto)
     {

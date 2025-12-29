@@ -7,45 +7,29 @@ using VirtualWallet.Services;
 namespace VirtualWallet.Controllers;
 
 [ApiController]
+[Authorize(AuthenticationSchemes = "CookieAuth")]
 [Route("api/[controller]")]
 public class OrderController : ControllerBase
 {
     private readonly OrderService _orderService;
-
-
+    
     public OrderController(OrderService orderService)
     {
         _orderService = orderService;
     }
-
-    [Authorize(AuthenticationSchemes = "CookieAuth")]
+    
     [HttpPost]
-    public async Task<IActionResult> AddOrder([FromBody] OrderPostDto orderPostDTO)
+    public async Task<IActionResult> AddOrder([FromBody] OrderPostDto orderPostDto)
     {
-        var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        if (string.IsNullOrEmpty(userIdString))
-            return Unauthorized();
-        if (!Guid.TryParse(userIdString, out var userId))
-            return Unauthorized();
-        
-        await _orderService.AddOrderAsync(userId, orderPostDTO);
+        await _orderService.AddOrderAsync(orderPostDto);
         return Ok();
     }
-
-    [Authorize(AuthenticationSchemes = "CookieAuth")]
+    
     [HttpGet]
     public async Task<IActionResult> GetOrders(
         [FromQuery] int page = 2, [FromQuery] int size = 1)
     {
-        var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        
-        if (string.IsNullOrEmpty(userIdString))
-            return Unauthorized();
-        if (!Guid.TryParse(userIdString, out var userId))
-            return Unauthorized();
-
-        var ordersPaginatedDTO = await _orderService.GetOrdersAsync(userId, page, size);
-        return Ok(ordersPaginatedDTO);
+        var ordersPaginatedDto = await _orderService.GetOrdersAsync(page, size);
+        return Ok(ordersPaginatedDto);
     }
 }

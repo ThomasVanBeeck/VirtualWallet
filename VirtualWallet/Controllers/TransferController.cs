@@ -7,6 +7,7 @@ using VirtualWallet.Services;
 namespace VirtualWallet.Controllers;
 
 [ApiController]
+[Authorize(AuthenticationSchemes = "CookieAuth")]
 [Route("api/[controller]")]
 public class TransferController : ControllerBase
 {
@@ -18,18 +19,10 @@ public class TransferController : ControllerBase
         _transferService = transferService;
     }
 
-    [Authorize(AuthenticationSchemes = "CookieAuth")]
     [HttpPost]
-    public async Task<IActionResult> AddTransfer([FromBody] TransferDto transferDTO)
+    public async Task<IActionResult> AddTransfer([FromBody] TransferDto transferDto)
     {
-        var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        if (string.IsNullOrEmpty(userIdString))
-            return Unauthorized();
-        if (!Guid.TryParse(userIdString, out var userId))
-            return Unauthorized(); 
-        
-        await _transferService.AddTransferAsync(userId, transferDTO);
+        await _transferService.AddTransferAsync(transferDto);
         return Ok();
     }
 }

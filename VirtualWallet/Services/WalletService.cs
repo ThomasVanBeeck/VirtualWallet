@@ -5,14 +5,15 @@ using VirtualWallet.Interfaces;
 
 namespace VirtualWallet.Services;
 
-public class WalletService
+public class WalletService: AbstractService
 {
     private readonly IHoldingRepository _holdingRepository;
     private readonly ITransferRepository _transferRepository;
     private readonly IWalletRepository _walletRepository;
     private readonly IMapper _mapper;
 
-    public WalletService(IHoldingRepository holdingRepository, ITransferRepository transferRepository, IWalletRepository walletRepository, IMapper mapper)
+    public WalletService(IHoldingRepository holdingRepository, ITransferRepository transferRepository, IWalletRepository walletRepository, IMapper mapper,
+        IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
     {
         _holdingRepository = holdingRepository;
         _transferRepository = transferRepository;
@@ -26,9 +27,9 @@ public class WalletService
         public float PricePerShare { get; set; }
     }
     
-    public async Task<WalletSummaryDto> GetWalletSummaryAsync(Guid userId, int page, int size)
+    public async Task<WalletSummaryDto> GetWalletSummaryAsync(int page, int size)
     {
-        var wallet = await _walletRepository.GetByUserIdAsync(userId);
+        var wallet = await _walletRepository.GetByUserIdAsync(UserId);
         if (wallet == null)
             throw new Exception("Wallet not found");
 

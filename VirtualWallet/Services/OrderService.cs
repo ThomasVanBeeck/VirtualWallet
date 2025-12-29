@@ -6,7 +6,7 @@ using VirtualWallet.Models;
 
 namespace VirtualWallet.Services;
 
-public class OrderService
+public class OrderService : AbstractService
 {
     private readonly IHoldingRepository _holdingRepository;
     private readonly IOrderRepository _orderRepository;
@@ -14,9 +14,12 @@ public class OrderService
     private readonly IStockRepository _stockRepository;
     private readonly IMapper _mapper;
 
-    public OrderService(IHoldingRepository holdingRepository, IOrderRepository orderRepository, IWalletRepository walletRepository,
+    public OrderService(IHoldingRepository holdingRepository,
+        IOrderRepository orderRepository,
+        IWalletRepository walletRepository,
         IStockRepository stockRepository,
-        IMapper mapper)
+        IHttpContextAccessor httpContextAccessor,
+        IMapper mapper) : base(httpContextAccessor)
     {
         _holdingRepository = holdingRepository;
         _orderRepository = orderRepository;
@@ -25,9 +28,9 @@ public class OrderService
         _mapper = mapper;
     }
 
-    public async Task AddOrderAsync(Guid userId, OrderPostDto orderPostDto)
+    public async Task AddOrderAsync(OrderPostDto orderPostDto)
     {
-        var wallet = await _walletRepository.GetByUserIdAsync(userId);
+        var wallet = await _walletRepository.GetByUserIdAsync(UserId);
         
         if (wallet == null)
             throw new Exception("Wallet not found for user");
@@ -100,9 +103,9 @@ public class OrderService
         await _walletRepository.UpdateAsync(wallet); 
     }
 
-    public async Task<OrdersPaginatedDto> GetOrdersAsync(Guid userId, int page, int size)
+    public async Task<OrdersPaginatedDto> GetOrdersAsync(int page, int size)
     {
-        var wallet = await _walletRepository.GetByUserIdAsync(userId);
+        var wallet = await _walletRepository.GetByUserIdAsync(UserId);
         if (wallet == null)
             throw new Exception("Wallet not found");
         

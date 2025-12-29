@@ -7,13 +7,14 @@ using VirtualWallet.Repositories;
 
 namespace VirtualWallet.Services;
 
-public class UserService
+public class UserService: AbstractService
 {
     private readonly IUserRepository _userRepository;
     private readonly IWalletRepository _walletRepository;
     private readonly IMapper _mapper;
 
-    public UserService(IUserRepository userRepository, IWalletRepository walletRepository, IMapper mapper)
+    public UserService(IUserRepository userRepository, IWalletRepository walletRepository, IMapper mapper,
+        IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
     {
         _userRepository = userRepository;
         _walletRepository = walletRepository;
@@ -31,9 +32,9 @@ public class UserService
         return user;
     }
 
-    public async Task<UserDto?> GetCurrentUserAsync(Guid id)
+    public async Task<UserDto?> GetCurrentUserAsync()
     {
-        var user = await _userRepository.GetByIdAsync(id);
+        var user = await _userRepository.GetByIdAsync(UserId);
         if (user == null) return null;
         else return _mapper.Map<UserDto>(user);
     }

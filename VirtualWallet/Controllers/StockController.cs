@@ -6,6 +6,7 @@ namespace VirtualWallet.Controllers;
 using Dtos;
 
 [ApiController]
+[Authorize(AuthenticationSchemes = "CookieAuth")]
 [Route("api/[controller]")]
 public class StockController :  ControllerBase
 {
@@ -16,15 +17,13 @@ public class StockController :  ControllerBase
         _stockService = stockService;
     }
 
-    [Authorize(AuthenticationSchemes = "CookieAuth")]
     [HttpGet("all")]
     public async Task<IActionResult> GetAllStocks()
     {
         var stocks = await _stockService.GetAllStocks();
         return Ok(stocks);
     }
-
-    [Authorize(AuthenticationSchemes = "CookieAuth")]
+    
     [HttpGet("lastupdate")]
     public async Task<IActionResult> GetLastUpdateTimestamp()
     {

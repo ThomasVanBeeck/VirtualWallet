@@ -6,22 +6,23 @@ using VirtualWallet.Models;
 
 namespace VirtualWallet.Services;
 
-public class TransferService
+public class TransferService: AbstractService
 {
     private readonly ITransferRepository _transferRepository;
     private readonly IWalletRepository _walletRepository;
     private readonly IMapper _mapper;
 
-    public TransferService(ITransferRepository transferRepository, IWalletRepository walletRepository, IMapper mapper)
+    public TransferService(ITransferRepository transferRepository, IWalletRepository walletRepository, IMapper mapper,
+        IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
     {
         _transferRepository = transferRepository;
         _walletRepository = walletRepository;
         _mapper = mapper;
     }
 
-    public async Task AddTransferAsync(Guid userId, TransferDto transferDto)
+    public async Task AddTransferAsync(TransferDto transferDto)
     {
-        var wallet = await _walletRepository.GetByUserIdAsync(userId);
+        var wallet = await _walletRepository.GetByUserIdAsync(UserId);
         
         if (wallet == null)
             throw new Exception("Wallet not found for user");

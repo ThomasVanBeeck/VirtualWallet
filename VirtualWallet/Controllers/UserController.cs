@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using VirtualWallet.Dtos;
 using VirtualWallet.Services;
@@ -7,6 +6,7 @@ using VirtualWallet.Services;
 namespace VirtualWallet.Controllers;
 
 [ApiController]
+[Authorize(AuthenticationSchemes = "CookieAuth")]
 [Route("api/[controller]")]
 public class UserController : ControllerBase
 {
@@ -17,25 +17,18 @@ public class UserController : ControllerBase
         _userService = userService;
     }
     
-    [Authorize(AuthenticationSchemes = "CookieAuth")]
     [HttpGet("current-user")]
     public async Task<ActionResult<UserDto>> GetCurrentUser() 
     {
-        var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        
-        if (string.IsNullOrEmpty(userIdString))
-            return Unauthorized(); 
-        if (!Guid.TryParse(userIdString, out var id))
-            return Unauthorized(); 
-        
-        var userDTO = await _userService.GetCurrentUserAsync(id);
+        var userDto = await _userService.GetCurrentUserAsync();
 
-        if (userDTO == null) 
+        if (userDto == null) 
             return NotFound("User not found.");
 
-        return Ok(userDTO);
+        return Ok(userDto);
     }
 
+    [AllowAnonymous]
     [HttpGet("exists/{username}")]
     public async Task<ActionResult<bool>> GetExists(string username)
     {
@@ -43,6 +36,7 @@ public class UserController : ControllerBase
         return Ok(isKnownUsername);
     }
 
+    [AllowAnonymous]
     [HttpPost("create-user")]
     public async Task<IActionResult> CreateUser([FromBody] UserRegisterDto userRegisterDto)
     {

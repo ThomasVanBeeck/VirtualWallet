@@ -10,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddHttpClient();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
@@ -84,8 +85,8 @@ if (app.Environment.IsDevelopment())
     //app.UseSwaggerUI();
     using (var scope = app.Services.CreateScope())
     {
-        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        DbSeeder.Seed(db);
+        //var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        //DbSeeder.Seed(db);
     }
 }
 
