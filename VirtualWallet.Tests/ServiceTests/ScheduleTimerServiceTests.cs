@@ -21,7 +21,7 @@ public class ScheduleTimerServiceTests
     public async Task GetLastUpdateTimestampAsync_ReturnsMinValue_WhenNoEntryExists()
     {
         // Arrange
-        _scheduleTimerRepositoryMock.Setup(r => r.GetAsync("LastStockUpdateTimestamp"))
+        _scheduleTimerRepositoryMock.Setup(r => r.GetByTimestampKeyAsync("LastStockUpdateTimestamp"))
             .ReturnsAsync((ScheduleTimer?)null);
 
         // Act
@@ -41,7 +41,7 @@ public class ScheduleTimerServiceTests
             Key = "LastStockUpdateTimestamp",
             Value = "not-a-date"
         };
-        _scheduleTimerRepositoryMock.Setup(r => r.GetAsync("LastStockUpdateTimestamp"))
+        _scheduleTimerRepositoryMock.Setup(r => r.GetByTimestampKeyAsync("LastStockUpdateTimestamp"))
             .ReturnsAsync(storedTimer);
 
         // Act
@@ -55,7 +55,7 @@ public class ScheduleTimerServiceTests
     public async Task SetLastUpdateTimestampAsync_AddsNewEntry_WhenNoneExists()
     {
         // Arrange
-        _scheduleTimerRepositoryMock.Setup(r => r.GetAsync("LastStockUpdateTimestamp"))
+        _scheduleTimerRepositoryMock.Setup(r => r.GetByTimestampKeyAsync("LastStockUpdateTimestamp"))
             .ReturnsAsync((ScheduleTimer?)null);
 
         var newTimestamp = DateTime.UtcNow;
@@ -78,7 +78,7 @@ public class ScheduleTimerServiceTests
             Key = "LastStockUpdateTimestamp",
             Value = DateTime.UtcNow.AddDays(-1).ToString("o")
         };
-        _scheduleTimerRepositoryMock.Setup(r => r.GetAsync("LastStockUpdateTimestamp"))
+        _scheduleTimerRepositoryMock.Setup(r => r.GetByTimestampKeyAsync("LastStockUpdateTimestamp"))
             .ReturnsAsync(existingTimer);
 
         var newTimestamp = DateTime.UtcNow;

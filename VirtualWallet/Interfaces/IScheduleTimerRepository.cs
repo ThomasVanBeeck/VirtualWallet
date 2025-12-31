@@ -4,6 +4,6 @@ namespace VirtualWallet.Interfaces;
 
 public interface IScheduleTimerRepository
 {
-    Task<ScheduleTimer?> GetAsync(string timestampKey);
+    Task<ScheduleTimer?> GetByTimestampKeyAsync(string timestampKey);
     Task UpdateOrAddAsync(ScheduleTimer timer);
 }

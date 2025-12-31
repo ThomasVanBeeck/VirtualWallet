@@ -6,5 +6,5 @@ public interface IStockRepository
 {
     Task<Stock?> GetByNameAsync(string name);
     Task<List<Stock>> GetAllAsync();
-    Task UpdateAsync(Stock updatedStock);
+    void UpdateAsync(Stock updatedStock);
 }

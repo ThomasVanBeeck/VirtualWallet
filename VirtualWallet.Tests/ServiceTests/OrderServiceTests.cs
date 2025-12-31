@@ -121,7 +121,7 @@ public class OrderServiceTests
         _holdingRepositoryMock.Setup(r => r.GetByWalletAndStockAsync(stock.Id, wallet.Id)).ReturnsAsync((Holding?)null);
 
         var holding = new Holding { Id = Guid.NewGuid(), StockId = stock.Id, WalletId = wallet.Id };
-        _holdingRepositoryMock.Setup(r => r.AddAsync(It.IsAny<Holding>())).ReturnsAsync(holding);
+        _holdingRepositoryMock.Setup(r => r.AddAsync(It.IsAny<Holding>()));
 
         var orderEntity = new Order();
         _mapperMock.Setup(m => m.Map<Order>(It.IsAny<OrderPostDto>())).Returns(orderEntity);

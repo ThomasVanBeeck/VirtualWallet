@@ -4,33 +4,28 @@ using VirtualWallet.Models;
 
 namespace VirtualWallet.Repositories;
 
-public class ScheduleTimerRepository: IScheduleTimerRepository
+public class ScheduleTimerRepository: AbstractBaseRepository<ScheduleTimer>, IScheduleTimerRepository
 {
-    private readonly AppDbContext _context;
+    public ScheduleTimerRepository(AppDbContext context): base(context)
+    { }
 
-    public ScheduleTimerRepository(AppDbContext context)
+    public async Task<ScheduleTimer?> GetByTimestampKeyAsync(string timestampKey)
     {
-        _context = context;
-    }
-
-    public async Task<ScheduleTimer?> GetAsync(string timestampKey)
-    {
-        return await _context.ScheduleTimers
+        return await DbSet
             .AsNoTracking()
             .FirstOrDefaultAsync(s => s.Key == timestampKey);
     }
     
     public async Task UpdateOrAddAsync(ScheduleTimer timer)
     {
-        var existingTimer = await _context.ScheduleTimers.FindAsync(timer.Key);
+        var existingTimer = await DbSet.FindAsync(timer.Key);
         if (existingTimer == null)
         {
-            _context.ScheduleTimers.Add(timer);
+            DbSet.Add(timer);
         }
         else
         {
             existingTimer.Value = timer.Value;
         }
-        await _context.SaveChangesAsync();
     }
 }

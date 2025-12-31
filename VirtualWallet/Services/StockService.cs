@@ -8,7 +8,7 @@ using VirtualWallet.Models.ExternalAPIs;
 
 namespace VirtualWallet.Services;
 
-public class StockService
+public class StockService: AbstractBaseService
 {
     private readonly string _apiKey;
     private readonly string _apiUrlCrypto;
@@ -21,8 +21,14 @@ public class StockService
     private readonly TimeSpan _updateInterval = TimeSpan.FromHours(24);
     private const string TimestampKey = "LastStockUpdateTimestamp";
 
-    public StockService(IStockRepository stockRepository, IMapper mapper, IConfiguration config, HttpClient http,
-        IScheduleTimerRepository scheduleTimerRepository ,ISettingsService settingsService)
+    public StockService(IStockRepository stockRepository,
+        IMapper mapper,
+        IConfiguration config,
+        HttpClient http,
+        IScheduleTimerRepository scheduleTimerRepository
+        ,ISettingsService settingsService,
+        IUnitOfWork unitOfWork,
+        IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor, unitOfWork)
     {
         _stockRepository = stockRepository;
         _mapper = mapper;
@@ -98,7 +104,8 @@ public class StockService
                         var currentStock = t;
                         currentStock.ChangePct24Hr = changePct24Hr;
                         currentStock.PricePerShare = dayPrice;
-                        await _stockRepository.UpdateAsync(currentStock);
+                        _stockRepository.UpdateAsync(currentStock);
+                        await UnitOfWork.SaveChangesAsync();
                     }
                     catch (HttpRequestException ex)
                     {
@@ -118,7 +125,7 @@ public class StockService
     {
         const string displayFormat = "yyyy-MM-dd HH:mm:ss"; 
         
-        var scheduleTimer = await _scheduleTimerRepository.GetAsync(TimestampKey);
+        var scheduleTimer = await _scheduleTimerRepository.GetByTimestampKeyAsync(TimestampKey);
     
         DateTime lastRunTimeUtc;
         

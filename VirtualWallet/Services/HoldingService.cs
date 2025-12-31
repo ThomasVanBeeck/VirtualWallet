@@ -2,12 +2,13 @@
 
 namespace VirtualWallet.Services;
 
-public class HoldingService : AbstractService
+public class HoldingService : AbstractBaseService
 {
     private readonly IHoldingRepository _holdingRepository;
 
     public HoldingService(IHoldingRepository holdingRepository,
-        IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
+        IHttpContextAccessor httpContextAccessor,
+        IUnitOfWork unitOfWork) : base(httpContextAccessor, unitOfWork)
     {
         _holdingRepository = holdingRepository;
     }

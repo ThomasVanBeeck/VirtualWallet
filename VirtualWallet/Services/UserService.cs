@@ -7,14 +7,17 @@ using VirtualWallet.Repositories;
 
 namespace VirtualWallet.Services;
 
-public class UserService: AbstractService
+public class UserService: AbstractBaseService
 {
     private readonly IUserRepository _userRepository;
     private readonly IWalletRepository _walletRepository;
     private readonly IMapper _mapper;
 
-    public UserService(IUserRepository userRepository, IWalletRepository walletRepository, IMapper mapper,
-        IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
+    public UserService(IUserRepository userRepository,
+        IWalletRepository walletRepository,
+        IMapper mapper,
+        IHttpContextAccessor httpContextAccessor,
+        IUnitOfWork unitOfWork) : base(httpContextAccessor, unitOfWork)
     {
         _userRepository = userRepository;
         _walletRepository = walletRepository;
@@ -53,12 +56,13 @@ public class UserService: AbstractService
             throw new InvalidOperationException("Username already exists");
         }
         var user = _mapper.Map<User>(userRegisterDto);
-        await _userRepository.AddAsync(user);
+        _userRepository.AddAsync(user);
         var wallet = new Wallet
         {
             Id = Guid.NewGuid(),
             UserId = user.Id
         };
-        await _walletRepository.AddAsync(wallet);
+        _walletRepository.AddAsync(wallet);
+        await UnitOfWork.SaveChangesAsync();
     }
 }

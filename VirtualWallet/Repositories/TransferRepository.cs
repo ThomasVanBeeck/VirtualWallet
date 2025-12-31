@@ -5,19 +5,11 @@ using VirtualWallet.Models;
 
 namespace VirtualWallet.Repositories;
 
-public class TransferRepository: ITransferRepository
+public class TransferRepository: AbstractBaseRepository<Transfer>, ITransferRepository
 {
-    private readonly AppDbContext _context;
 
-    public TransferRepository(AppDbContext context)
+    public TransferRepository(AppDbContext context): base(context)
     {
-        _context = context;
-    }
-
-    public async Task AddAsync(Transfer transfer)
-    {
-        _context.Transfers.Add(transfer);
-        await _context.SaveChangesAsync();
     }
     
     public async Task<PaginatedResult<Transfer>> GetByWalletIdPaginatedAsync(Guid walletId, int page, int size)
@@ -25,7 +17,7 @@ public class TransferRepository: ITransferRepository
         if (page < 1) page = 1;
         if (size < 1) size = 10;
 
-        var query = _context.Transfers
+        var query = DbSet
             .AsNoTracking()
             .Where(t => t.WalletId == walletId)
             .OrderByDescending(t => t.Date);

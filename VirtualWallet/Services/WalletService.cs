@@ -5,15 +5,19 @@ using VirtualWallet.Interfaces;
 
 namespace VirtualWallet.Services;
 
-public class WalletService: AbstractService
+public class WalletService: AbstractBaseService
 {
     private readonly IHoldingRepository _holdingRepository;
     private readonly ITransferRepository _transferRepository;
     private readonly IWalletRepository _walletRepository;
     private readonly IMapper _mapper;
 
-    public WalletService(IHoldingRepository holdingRepository, ITransferRepository transferRepository, IWalletRepository walletRepository, IMapper mapper,
-        IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
+    public WalletService(IHoldingRepository holdingRepository,
+        ITransferRepository transferRepository,
+        IWalletRepository walletRepository,
+        IMapper mapper,
+        IHttpContextAccessor httpContextAccessor,
+        IUnitOfWork unitOfWork) : base(httpContextAccessor, unitOfWork)
     {
         _holdingRepository = holdingRepository;
         _transferRepository = transferRepository;

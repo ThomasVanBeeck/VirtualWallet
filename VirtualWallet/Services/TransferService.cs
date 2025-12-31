@@ -6,14 +6,17 @@ using VirtualWallet.Models;
 
 namespace VirtualWallet.Services;
 
-public class TransferService: AbstractService
+public class TransferService: AbstractBaseService
 {
     private readonly ITransferRepository _transferRepository;
     private readonly IWalletRepository _walletRepository;
     private readonly IMapper _mapper;
 
-    public TransferService(ITransferRepository transferRepository, IWalletRepository walletRepository, IMapper mapper,
-        IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
+    public TransferService(ITransferRepository transferRepository,
+        IWalletRepository walletRepository,
+        IMapper mapper,
+        IHttpContextAccessor httpContextAccessor,
+        IUnitOfWork unitOfWork) : base(httpContextAccessor, unitOfWork)
     {
         _transferRepository = transferRepository;
         _walletRepository = walletRepository;
@@ -35,7 +38,7 @@ public class TransferService: AbstractService
         entity.Id = Guid.NewGuid();
         entity.WalletId = wallet.Id;
         
-        await _transferRepository.AddAsync(entity);
+        _transferRepository.AddAsync(entity);
         
         switch (transferDto.Type)
         {
@@ -48,6 +51,7 @@ public class TransferService: AbstractService
             default:
                 throw new ArgumentOutOfRangeException();
         }
-        await _walletRepository.UpdateAsync(wallet);
+        _walletRepository.UpdateAsync(wallet);
+        await UnitOfWork.SaveChangesAsync();
     }
 }

@@ -1,5 +1,6 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AControllerBase_002Ecs_002Fl_003AC_0021_003FUsers_003FThomas_003FAppData_003FRoaming_003FJetBrains_003FRider2025_002E1_003Fresharper_002Dhost_003FSourcesCache_003F96a4cc66aa48dda8a9d8be8febec4a769fc143f7a86dd53ecdebfb9c3177d_003FControllerBase_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003ADbSet_002Ecs_002Fl_003AC_0021_003FUsers_003FThomas_003FAppData_003FRoaming_003FJetBrains_003FRider2025_002E1_003Fresharper_002Dhost_003FSourcesCache_003F4b21fc3f8a3abb5d25f06c622276fbec0fd3932f169cc6af520bf5abc6a46b4_003FDbSet_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AIConfiguration_002Ecs_002Fl_003AC_0021_003FUsers_003FThomas_003FAppData_003FRoaming_003FJetBrains_003FRider2025_002E1_003Fresharper_002Dhost_003FDecompilerCache_003Fdecompiler_003F649f9a5315084d038b64e29ea11b1fb5b938_003F45_003F2556fa86_003FIConfiguration_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AMapper_002Ecs_002Fl_003AC_0021_003FUsers_003FThomas_003FAppData_003FRoaming_003FJetBrains_003FRider2025_002E1_003Fresharper_002Dhost_003FSourcesCache_003F829d6ac6e62b9bee9ef8e79e827d87d0c31a7c2eefbc354135d9a8f2c4deb_003FMapper_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003APrincipalExtensions_002Ecs_002Fl_003AC_0021_003FUsers_003FThomas_003FAppData_003FRoaming_003FJetBrains_003FRider2025_002E1_003Fresharper_002Dhost_003FSourcesCache_003Fcc1ad596b4fde937674ff6c832655e53b7c6cc97b1b7a38893ad352a788057_003FPrincipalExtensions_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
@@ -11,12 +12,13 @@
     &lt;TestId&gt;xUnit::0F5F47FE-CBEB-4DD6-B4ED-8846CBD93D99::net8.0::VirtualWallet.Tests.ServiceTests.UserServiceTests&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=37e4c968_002D50ea_002D41bd_002Db767_002D107eb0e7ffa2/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="StockServiceTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=37e4c968_002D50ea_002D41bd_002Db767_002D107eb0e7ffa2/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="StockServiceTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;xUnit::0F5F47FE-CBEB-4DD6-B4ED-8846CBD93D99::net8.0::VirtualWallet.Tests.ServiceTests.StockServiceTests&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::0F5F47FE-CBEB-4DD6-B4ED-8846CBD93D99::net8.0::VirtualWallet.Tests.ServiceTests.TransferServiceTests&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::0F5F47FE-CBEB-4DD6-B4ED-8846CBD93D99::net8.0::VirtualWallet.Tests.ServiceTests.UserServiceTests&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::0F5F47FE-CBEB-4DD6-B4ED-8846CBD93D99::net8.0::VirtualWallet.Tests.ServiceTests.WalletServiceTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::0F5F47FE-CBEB-4DD6-B4ED-8846CBD93D99::net8.0::VirtualWallet.Tests.ServiceTests.OrderServiceTests&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=40db6bbb_002D3ae9_002D411a_002D9d08_002Db575ca1865a7/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="GetOrdersAsync_Throws_WhenWalletNotFound" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
@@ -39,7 +41,7 @@
     &lt;TestId&gt;xUnit::0F5F47FE-CBEB-4DD6-B4ED-8846CBD93D99::net8.0::VirtualWallet.Tests.ServiceTests.WalletServiceTests.GetWalletSummaryAsync_Throws_WhenWalletNotFound&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=d62f5133_002D5bbb_002D416c_002Dac15_002D0c5c3f1ae064/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="WalletServiceTests #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=d62f5133_002D5bbb_002D416c_002Dac15_002D0c5c3f1ae064/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="WalletServiceTests #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;xUnit::0F5F47FE-CBEB-4DD6-B4ED-8846CBD93D99::net8.0::VirtualWallet.Tests.ServiceTests.WalletServiceTests&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::0F5F47FE-CBEB-4DD6-B4ED-8846CBD93D99::net8.0::VirtualWallet.Tests.ServiceTests.OrderServiceTests&lt;/TestId&gt;&#xD;

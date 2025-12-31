@@ -4,29 +4,15 @@ using VirtualWallet.Models;
 
 namespace VirtualWallet.Repositories
 {
-    public class UserRepository: IUserRepository
+    public class UserRepository: AbstractBaseRepository<User>, IUserRepository
+
     {
-        private readonly AppDbContext _context;
-
-        public UserRepository(AppDbContext context)
-        {
-            _context = context;
-        }
-
-        public async Task<User?> GetByIdAsync(Guid id)
-        {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
-        }
+        public UserRepository(AppDbContext context): base(context)
+        { }
         
         public async Task<User?> GetByUsernameAsync(string username)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
-        }
-
-        public async Task AddAsync(User user)
-        {
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+            return await DbSet.FirstOrDefaultAsync(u => u.Username == username);
         }
     }
 }

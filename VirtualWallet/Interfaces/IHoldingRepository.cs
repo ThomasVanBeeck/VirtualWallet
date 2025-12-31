@@ -6,5 +6,5 @@ public interface IHoldingRepository
 {
     Task<Holding?> GetByWalletAndStockAsync(Guid stockId, Guid walletId);
     Task<List<Holding>> GetByWalletIdAsync(Guid walletId);
-    Task<Holding?> AddAsync(Holding holding);
+    void AddAsync(Holding holding);
 }

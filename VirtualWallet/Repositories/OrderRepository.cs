@@ -4,27 +4,18 @@ using VirtualWallet.Models;
 
 namespace VirtualWallet.Repositories;
 
-public class OrderRepository: IOrderRepository
+public class OrderRepository: AbstractBaseRepository<Order>, IOrderRepository
 {
-    private readonly AppDbContext _context;
 
-    public OrderRepository(AppDbContext context)
-    {
-        _context = context;
-    }
-
-    public async Task AddAsync(Order order)
-    {
-        _context.Orders.Add(order);
-        await _context.SaveChangesAsync();
-    }
-
+    public OrderRepository(AppDbContext context): base (context)
+    { }
+    
     public async Task<PaginatedResult<Order>> GetOrdersByWalletIdAsync(Guid walletId, int page, int size)
     {
         if (page < 1) page = 1;
         if (size < 1) size = 10;
 
-        var query = _context.Orders
+        var query = DbSet
             .AsNoTracking()
             .Where(o => o.WalletId == walletId)
             .Include(o => o.Holding)

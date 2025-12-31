@@ -6,7 +6,7 @@ using VirtualWallet.Models;
 
 namespace VirtualWallet.Services;
 
-public class OrderService : AbstractService
+public class OrderService : AbstractBaseService
 {
     private readonly IHoldingRepository _holdingRepository;
     private readonly IOrderRepository _orderRepository;
@@ -19,7 +19,8 @@ public class OrderService : AbstractService
         IWalletRepository walletRepository,
         IStockRepository stockRepository,
         IHttpContextAccessor httpContextAccessor,
-        IMapper mapper) : base(httpContextAccessor)
+        IUnitOfWork unitOfWork,
+        IMapper mapper) : base(httpContextAccessor, unitOfWork)
     {
         _holdingRepository = holdingRepository;
         _orderRepository = orderRepository;
@@ -55,18 +56,17 @@ public class OrderService : AbstractService
 
         else if (holding == null)
         {
-            if (holding == null && orderPostDto.Type == OrderType.Sell)
+            if (orderPostDto.Type == OrderType.Sell)
                 throw new Exception("No stocks available to sell.");
             
-            Holding newHolding = new Holding()
+            holding = new Holding()
             {
                 Id = Guid.NewGuid(),
                 StockId = stock.Id,
                 WalletId = wallet.Id
             };
-            holding = await _holdingRepository.AddAsync(newHolding);
-            if (holding == null)
-                throw new Exception("Holding not found and unable to create holding.");
+            _holdingRepository.AddAsync(holding);
+
         }
         
         float totalValue = orderPostDto.Amount * orderPostDto.Price;
@@ -84,7 +84,7 @@ public class OrderService : AbstractService
         var total = orderPostDto.Amount * orderPostDto.Price;
         
         entity.Total = total;
-        await _orderRepository.AddAsync(entity);
+        _orderRepository.AddAsync(entity);
 
         switch (orderPostDto.Type)
         {
@@ -99,8 +99,8 @@ public class OrderService : AbstractService
             default:
                 throw new ArgumentOutOfRangeException();
         }
-
-        await _walletRepository.UpdateAsync(wallet); 
+        _walletRepository.UpdateAsync(wallet);
+        await UnitOfWork.SaveChangesAsync();
     }
 
     public async Task<OrdersPaginatedDto> GetOrdersAsync(int page, int size)

@@ -1,14 +1,17 @@
 ﻿using System.Security.Claims;
+using VirtualWallet.Interfaces;
 
 namespace VirtualWallet.Services;
 
-public class AbstractService
+public class AbstractBaseService
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
+    protected IUnitOfWork UnitOfWork { get; }
 
-    protected AbstractService(IHttpContextAccessor httpContextAccessor)
+    protected AbstractBaseService(IHttpContextAccessor httpContextAccessor,  IUnitOfWork unitOfWork)
     {
         _httpContextAccessor = httpContextAccessor;
+        UnitOfWork = unitOfWork;
     }
 
     protected Guid UserId
@@ -21,5 +24,4 @@ public class AbstractService
             return userId;
         }
     }
-    
 }

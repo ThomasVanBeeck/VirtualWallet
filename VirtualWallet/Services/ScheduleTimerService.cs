@@ -4,19 +4,21 @@ using VirtualWallet.Models;
 
 namespace VirtualWallet.Services;
 
-public class ScheduleTimerService : ISettingsService
+public class ScheduleTimerService : AbstractBaseService, ISettingsService
 {
     private const string TimestampKey = "LastStockUpdateTimestamp";
     private readonly IScheduleTimerRepository _scheduleTimerRepository;
 
-    public ScheduleTimerService(IScheduleTimerRepository scheduleTimerRepository)
+    public ScheduleTimerService(IScheduleTimerRepository scheduleTimerRepository,
+        IHttpContextAccessor httpContextAccessor,
+        IUnitOfWork unitOfWork): base(httpContextAccessor, unitOfWork)
     {
         _scheduleTimerRepository = scheduleTimerRepository;
     }
 
     public async Task<DateTime> GetLastUpdateTimestampAsync()
     {
-        var scheduleTimer = await _scheduleTimerRepository.GetAsync(TimestampKey);
+        var scheduleTimer = await _scheduleTimerRepository.GetByTimestampKeyAsync(TimestampKey);
 
         if (scheduleTimer == null)
             // Als het nog niet bestaat, oudst mogelijke datum instellen
@@ -30,7 +32,7 @@ public class ScheduleTimerService : ISettingsService
 
     public async Task SetLastUpdateTimestampAsync(DateTime timestamp)
     {
-        var scheduleTimer = await _scheduleTimerRepository.GetAsync(TimestampKey);
+        var scheduleTimer = await _scheduleTimerRepository.GetByTimestampKeyAsync(TimestampKey);
 
         var timestampUtc = timestamp.ToUniversalTime().ToString("o", CultureInfo.InvariantCulture);
 
@@ -44,5 +46,6 @@ public class ScheduleTimerService : ISettingsService
             scheduleTimer.Value = timestampUtc;
 
         await _scheduleTimerRepository.UpdateOrAddAsync(scheduleTimer);
+        await UnitOfWork.SaveChangesAsync();   
     }
 }
