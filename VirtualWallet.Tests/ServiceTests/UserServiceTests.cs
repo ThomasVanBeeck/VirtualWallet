@@ -22,6 +22,8 @@ public class UserServiceTests
     private readonly UserDto _mockUserDto;
     private readonly UserRegisterDto _mockUserRegisterDto;
     private readonly Mock<IHttpContextAccessor> _httpContextAccessorMock;
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+
     private readonly Guid _testUserId = Guid.NewGuid();
 
     public UserServiceTests()
@@ -30,6 +32,8 @@ public class UserServiceTests
         _walletRepositoryMock = new Mock<IWalletRepository>();
         _mapperMock = new Mock<IMapper>();
         _httpContextAccessorMock = new Mock<IHttpContextAccessor>();
+        _unitOfWorkMock = new Mock<IUnitOfWork>();
+        
         
         var claims = new List<Claim> 
         { 
@@ -45,7 +49,8 @@ public class UserServiceTests
             _userRepositoryMock.Object,
             _walletRepositoryMock.Object,
             _mapperMock.Object,
-            _httpContextAccessorMock.Object
+            _httpContextAccessorMock.Object,
+            _unitOfWorkMock.Object
         );
 
         _mockUser = new User

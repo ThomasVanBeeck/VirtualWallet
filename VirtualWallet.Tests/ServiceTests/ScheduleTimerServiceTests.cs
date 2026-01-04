@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Moq;
 using VirtualWallet.Interfaces;
 using VirtualWallet.Models;
@@ -10,11 +11,17 @@ public class ScheduleTimerServiceTests
 {
     private readonly Mock<IScheduleTimerRepository> _scheduleTimerRepositoryMock;
     private readonly ScheduleTimerService _service;
+    private readonly Mock<IHttpContextAccessor> _httpContextAccessorMock;
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
 
     public ScheduleTimerServiceTests()
     {
         _scheduleTimerRepositoryMock = new Mock<IScheduleTimerRepository>();
-        _service = new ScheduleTimerService(_scheduleTimerRepositoryMock.Object);
+        _httpContextAccessorMock = new Mock<IHttpContextAccessor>();
+        _unitOfWorkMock = new Mock<IUnitOfWork>();
+        _service = new ScheduleTimerService(_scheduleTimerRepositoryMock.Object,
+            _httpContextAccessorMock.Object,
+            _unitOfWorkMock.Object);
     }
 
     [Fact]

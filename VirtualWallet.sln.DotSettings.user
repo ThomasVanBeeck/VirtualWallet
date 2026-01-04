@@ -12,14 +12,8 @@
     &lt;TestId&gt;xUnit::0F5F47FE-CBEB-4DD6-B4ED-8846CBD93D99::net8.0::VirtualWallet.Tests.ServiceTests.UserServiceTests&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=37e4c968_002D50ea_002D41bd_002Db767_002D107eb0e7ffa2/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="StockServiceTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;TestAncestor&gt;&#xD;
-    &lt;TestId&gt;xUnit::0F5F47FE-CBEB-4DD6-B4ED-8846CBD93D99::net8.0::VirtualWallet.Tests.ServiceTests.StockServiceTests&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::0F5F47FE-CBEB-4DD6-B4ED-8846CBD93D99::net8.0::VirtualWallet.Tests.ServiceTests.TransferServiceTests&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::0F5F47FE-CBEB-4DD6-B4ED-8846CBD93D99::net8.0::VirtualWallet.Tests.ServiceTests.UserServiceTests&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::0F5F47FE-CBEB-4DD6-B4ED-8846CBD93D99::net8.0::VirtualWallet.Tests.ServiceTests.WalletServiceTests&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::0F5F47FE-CBEB-4DD6-B4ED-8846CBD93D99::net8.0::VirtualWallet.Tests.ServiceTests.OrderServiceTests&lt;/TestId&gt;&#xD;
-  &lt;/TestAncestor&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=37e4c968_002D50ea_002D41bd_002Db767_002D107eb0e7ffa2/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="StockServiceTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Project Location="T:\Github Projects\VirtualWallet-backend\VirtualWallet.Tests" Presentation="&amp;lt;VirtualWallet.Tests&amp;gt;" /&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=40db6bbb_002D3ae9_002D411a_002D9d08_002Db575ca1865a7/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="GetOrdersAsync_Throws_WhenWalletNotFound" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
@@ -41,7 +35,7 @@
     &lt;TestId&gt;xUnit::0F5F47FE-CBEB-4DD6-B4ED-8846CBD93D99::net8.0::VirtualWallet.Tests.ServiceTests.WalletServiceTests.GetWalletSummaryAsync_Throws_WhenWalletNotFound&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=d62f5133_002D5bbb_002D416c_002Dac15_002D0c5c3f1ae064/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="WalletServiceTests #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=d62f5133_002D5bbb_002D416c_002Dac15_002D0c5c3f1ae064/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="WalletServiceTests #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;xUnit::0F5F47FE-CBEB-4DD6-B4ED-8846CBD93D99::net8.0::VirtualWallet.Tests.ServiceTests.WalletServiceTests&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::0F5F47FE-CBEB-4DD6-B4ED-8846CBD93D99::net8.0::VirtualWallet.Tests.ServiceTests.OrderServiceTests&lt;/TestId&gt;&#xD;

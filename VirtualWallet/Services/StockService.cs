@@ -27,8 +27,9 @@ public class StockService: AbstractBaseService
         HttpClient http,
         IScheduleTimerRepository scheduleTimerRepository
         ,ISettingsService settingsService,
-        IUnitOfWork unitOfWork,
-        IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor, unitOfWork)
+        IHttpContextAccessor httpContextAccessor,
+        IUnitOfWork unitOfWork
+        ) : base(httpContextAccessor, unitOfWork)
     {
         _stockRepository = stockRepository;
         _mapper = mapper;

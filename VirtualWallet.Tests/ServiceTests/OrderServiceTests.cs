@@ -17,7 +17,6 @@ public class OrderServiceTests
     private readonly Mock<IOrderRepository> _orderRepositoryMock;
     private readonly Mock<IWalletRepository> _walletRepositoryMock;
     private readonly Mock<IStockRepository> _stockRepositoryMock;
-    private readonly Mock<IHttpContextAccessor> _httpContextAccessorMock;
     private readonly Mock<IMapper> _mapperMock;
     private readonly OrderService _orderService;
     private readonly Guid _testUserId = Guid.NewGuid();
@@ -28,7 +27,8 @@ public class OrderServiceTests
         _orderRepositoryMock = new Mock<IOrderRepository>();
         _walletRepositoryMock = new Mock<IWalletRepository>();
         _stockRepositoryMock = new Mock<IStockRepository>();
-        _httpContextAccessorMock = new Mock<IHttpContextAccessor>();
+        var httpContextAccessorMock = new Mock<IHttpContextAccessor>();
+        var unitOfWorkMock = new Mock<IUnitOfWork>();
         _mapperMock = new Mock<IMapper>();
         
         var claims = new List<Claim> 
@@ -39,14 +39,15 @@ public class OrderServiceTests
         var claimsPrincipal = new ClaimsPrincipal(identity);
         var httpContext = new DefaultHttpContext { User = claimsPrincipal };
 
-        _httpContextAccessorMock.Setup(a => a.HttpContext).Returns(httpContext);
+        httpContextAccessorMock.Setup(a => a.HttpContext).Returns(httpContext);
 
         _orderService = new OrderService(
             _holdingRepositoryMock.Object,
             _orderRepositoryMock.Object,
             _walletRepositoryMock.Object,
             _stockRepositoryMock.Object,
-            _httpContextAccessorMock.Object,
+            httpContextAccessorMock.Object,
+            unitOfWorkMock.Object,
             _mapperMock.Object
         );
     }
@@ -55,8 +56,7 @@ public class OrderServiceTests
     public async Task AddOrderAsync_Throws_WhenWalletNotFound()
     {
         // Arrange
-        var userId = Guid.NewGuid();
-        _walletRepositoryMock.Setup(r => r.GetByUserIdAsync(userId)).ReturnsAsync((Wallet?)null);
+        _walletRepositoryMock.Setup(r => r.GetByUserIdAsync(_testUserId)).ReturnsAsync((Wallet?)null);
         var dto = new OrderPostDto { StockName = "AAPL", Type = OrderType.Buy, Amount = 10, Price = 100 };
 
         // Act
@@ -70,9 +70,8 @@ public class OrderServiceTests
     public async Task AddOrderAsync_Throws_WhenStockNotFound()
     {
         // Arrange
-        var userId = Guid.NewGuid();
         var wallet = new Wallet { Id = Guid.NewGuid(), TotalCash = 1000 };
-        _walletRepositoryMock.Setup(r => r.GetByUserIdAsync(userId)).ReturnsAsync(wallet);
+        _walletRepositoryMock.Setup(r => r.GetByUserIdAsync(_testUserId)).ReturnsAsync(wallet);
         _stockRepositoryMock.Setup(r => r.GetByNameAsync("AAPL")).ReturnsAsync((Stock?)null);
 
         var dto = new OrderPostDto { StockName = "AAPL", Type = OrderType.Buy, Amount = 10, Price = 100 };
@@ -88,12 +87,12 @@ public class OrderServiceTests
     public async Task AddOrderAsync_Throws_WhenInsufficientFunds()
     {
         // Arrange
-        var userId = Guid.NewGuid();
+
         var wallet = new Wallet { Id = Guid.NewGuid(), TotalCash = 500 };
         var stock = new Stock { Id = Guid.NewGuid(), StockName = "Tesla", Symbol = "TSLA", Description = "description of Tesla" };
         var holding = new Holding { Id = Guid.NewGuid(), StockId = stock.Id, WalletId = wallet.Id, Orders = new List<Order>() };
 
-        _walletRepositoryMock.Setup(r => r.GetByUserIdAsync(userId)).ReturnsAsync(wallet);
+        _walletRepositoryMock.Setup(r => r.GetByUserIdAsync(_testUserId)).ReturnsAsync(wallet);
         _stockRepositoryMock.Setup(r => r.GetByNameAsync("Tesla")).ReturnsAsync(stock);
         _holdingRepositoryMock.Setup(r => r.GetByWalletAndStockAsync(stock.Id, wallet.Id)).ReturnsAsync(holding);
 
@@ -111,28 +110,24 @@ public class OrderServiceTests
     public async Task AddOrderAsync_AddsBuyOrderSuccessfully()
     {
         // Arrange
-        var userId = Guid.NewGuid();
         var wallet = new Wallet { Id = Guid.NewGuid(), TotalCash = 2000, TotalInStocks = 0 };
         var stock = new Stock { Id = Guid.NewGuid(),
             StockName = "Tesla", Symbol="TSLA", Description = "description of Tesla"};
 
-        _walletRepositoryMock.Setup(r => r.GetByUserIdAsync(userId)).ReturnsAsync(wallet);
-        _stockRepositoryMock.Setup(r => r.GetByNameAsync("AAPL")).ReturnsAsync(stock);
+        _walletRepositoryMock.Setup(r => r.GetByUserIdAsync(_testUserId)).ReturnsAsync(wallet);
+        _stockRepositoryMock.Setup(r => r.GetByNameAsync("Tesla")).ReturnsAsync(stock);
         _holdingRepositoryMock.Setup(r => r.GetByWalletAndStockAsync(stock.Id, wallet.Id)).ReturnsAsync((Holding?)null);
-
-        var holding = new Holding { Id = Guid.NewGuid(), StockId = stock.Id, WalletId = wallet.Id };
-        _holdingRepositoryMock.Setup(r => r.AddAsync(It.IsAny<Holding>()));
 
         var orderEntity = new Order();
         _mapperMock.Setup(m => m.Map<Order>(It.IsAny<OrderPostDto>())).Returns(orderEntity);
 
-        var dto = new OrderPostDto { StockName = "AAPL", Type = OrderType.Buy, Amount = 10, Price = 100 };
+        var dto = new OrderPostDto { StockName = "Tesla", Type = OrderType.Buy, Amount = 10, Price = 100 };
 
         // Act
         await _orderService.AddOrderAsync(dto);
 
         // Assert
-        _orderRepositoryMock.Verify(r => r.AddAsync(It.Is<Order>(o => o.Total == 1000 && o.HoldingId == holding.Id && o.WalletId == wallet.Id)), Times.Once);
+        _orderRepositoryMock.Verify(r => r.AddAsync(It.Is<Order>(o => o.Total == 1000 && o.WalletId == wallet.Id)), Times.Once);
         _walletRepositoryMock.Verify(r => r.UpdateAsync(It.Is<Wallet>(w => w.TotalCash == 1000 && w.TotalInStocks == 1000)), Times.Once);
     }
 
@@ -140,8 +135,7 @@ public class OrderServiceTests
     public async Task GetOrdersAsync_Throws_WhenWalletNotFound()
     {
         // Arrange
-        var userId = Guid.NewGuid();
-        _walletRepositoryMock.Setup(r => r.GetByUserIdAsync(userId)).ReturnsAsync((Wallet?)null);
+        _walletRepositoryMock.Setup(r => r.GetByUserIdAsync(_testUserId)).ReturnsAsync((Wallet?)null);
 
         // Act
         Func<Task> act = async () => await _orderService.GetOrdersAsync(1, 10);
@@ -154,9 +148,8 @@ public class OrderServiceTests
     public async Task GetOrdersAsync_ReturnsMappedOrders()
     {
         // Arrange
-        var userId = Guid.NewGuid();
         var wallet = new Wallet { Id = Guid.NewGuid() };
-        _walletRepositoryMock.Setup(r => r.GetByUserIdAsync(userId)).ReturnsAsync(wallet);
+        _walletRepositoryMock.Setup(r => r.GetByUserIdAsync(_testUserId)).ReturnsAsync(wallet);
 
         var orders = new Order[] { new Order { Id = Guid.NewGuid() } };
         var paginatedOrders = new PaginatedResult<Order> { Items = orders, CurrentPage = 1, TotalPages = 1 };

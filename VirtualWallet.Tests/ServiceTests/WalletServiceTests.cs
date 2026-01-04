@@ -19,7 +19,9 @@ public class WalletServiceTests
     private readonly Mock<IMapper> _mapperMock;
     private readonly WalletService _walletService;
     private readonly Mock<IHttpContextAccessor> _httpContextAccessorMock;
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
     private readonly Guid _testUserId = Guid.NewGuid();
+
 
     public WalletServiceTests()
     {
@@ -28,13 +30,15 @@ public class WalletServiceTests
         _walletRepositoryMock = new Mock<IWalletRepository>();
         _mapperMock = new Mock<IMapper>();
         _httpContextAccessorMock = new Mock<IHttpContextAccessor>();
+        _unitOfWorkMock = new Mock<IUnitOfWork>();
 
         _walletService = new WalletService(
             _holdingRepositoryMock.Object,
             _transferRepositoryMock.Object,
             _walletRepositoryMock.Object,
             _mapperMock.Object,
-            _httpContextAccessorMock.Object
+            _httpContextAccessorMock.Object,
+            _unitOfWorkMock.Object
         );
         
         var claims = new List<Claim> 

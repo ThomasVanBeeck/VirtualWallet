@@ -18,6 +18,7 @@ public class TransferServiceTests
     private readonly Mock<IMapper> _mapperMock;
     private readonly TransferService _transferService;
     private readonly Mock<IHttpContextAccessor> _httpContextAccessorMock;
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
     private readonly Guid _testUserId = Guid.NewGuid();
 
     public TransferServiceTests()
@@ -26,6 +27,7 @@ public class TransferServiceTests
         _walletRepositoryMock = new Mock<IWalletRepository>();
         _mapperMock = new Mock<IMapper>();
         _httpContextAccessorMock = new Mock<IHttpContextAccessor>();
+        _unitOfWorkMock = new Mock<IUnitOfWork>();
         
         var claims = new List<Claim> 
         { 
@@ -41,7 +43,8 @@ public class TransferServiceTests
             _transferRepositoryMock.Object,
             _walletRepositoryMock.Object,
             _mapperMock.Object,
-            _httpContextAccessorMock.Object
+            _httpContextAccessorMock.Object,
+            _unitOfWorkMock.Object
         );
     }
 

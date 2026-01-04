@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using AutoMapper;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Moq;
 using Moq.Protected;
@@ -20,6 +21,8 @@ public class StockServiceTests
     private readonly Mock<IConfiguration> _configMock;
     private readonly HttpClient _httpClient;
     private readonly StockService _stockService;
+    private readonly Mock<IHttpContextAccessor> _httpContextAccessorMock;
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
 
     public StockServiceTests()
     {
@@ -28,6 +31,8 @@ public class StockServiceTests
         _scheduleTimerRepositoryMock = new Mock<IScheduleTimerRepository>();
         _settingsServiceMock = new Mock<ISettingsService>();
         _configMock = new Mock<IConfiguration>();
+        _httpContextAccessorMock = new Mock<IHttpContextAccessor>();
+        _unitOfWorkMock = new Mock<IUnitOfWork>();
         _configMock.Setup(c => c["ApiKeys:AlphaVantage"]).Returns("FAKE_KEY");
 
         // Mock HttpClient met HttpMessageHandler
@@ -53,7 +58,9 @@ public class StockServiceTests
             _configMock.Object,
             _httpClient,
             _scheduleTimerRepositoryMock.Object,
-            _settingsServiceMock.Object
+            _settingsServiceMock.Object,
+            _httpContextAccessorMock.Object,
+            _unitOfWorkMock.Object
         );
     }
 
