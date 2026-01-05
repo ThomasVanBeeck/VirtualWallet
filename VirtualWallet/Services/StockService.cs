@@ -38,6 +38,7 @@ public class StockService: AbstractBaseService
         _settingsService = settingsService;
         _apiUrlStock = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY";
         _apiUrlCrypto = "https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&market=USD";
+        // voer hier externe API key in:
         _apiKey = config["ApiKeys:AlphaVantage"];
         if (string.IsNullOrEmpty(_apiKey))
             throw new InvalidOperationException("ApiKeys:AlphaVantage is not configured.");
@@ -106,6 +107,8 @@ public class StockService: AbstractBaseService
                         currentStock.ChangePct24Hr = changePct24Hr;
                         currentStock.PricePerShare = dayPrice;
                         _stockRepository.UpdateAsync(currentStock);
+                        // bewust saven per stock in de for loop, als er een stock faalt is het nog steeds beter dat de andere stock wel geupdated zijn
+                        // UnitOfWork buiten de for loop plaatsen zou alle stock updates bundelen en niks opslaan als er één bepaalde stock faalt
                         await UnitOfWork.SaveChangesAsync();
                     }
                     catch (HttpRequestException ex)

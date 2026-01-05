@@ -87,6 +87,7 @@ if (app.Environment.IsDevelopment())
     //app.UseSwaggerUI();
     using (var scope = app.Services.CreateScope())
     {
+        // Enable onderstaande lijnen code om de lokale database te wissen en te voorzien van enkele testgebruikers.
         //var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         //DbSeeder.Seed(db);
     }

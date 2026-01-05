@@ -5,7 +5,6 @@ using VirtualWallet.Models;
 namespace VirtualWallet.Repositories
 {
     public class UserRepository: AbstractBaseRepository<User>, IUserRepository
-
     {
         public UserRepository(AppDbContext context): base(context)
         { }
